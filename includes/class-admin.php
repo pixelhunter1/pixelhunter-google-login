@@ -50,9 +50,15 @@ class PixelHunter_Google_Login_Admin {
 			'button_theme' => ( 'dark' === ( $input['button_theme'] ?? 'light' ) ) ? 'dark' : 'light',
 		);
 		// Never persist the secret to the DB when the wp-config constant supplies it.
-		$out['client_secret'] = PixelHunter_Google_Login_Settings::secret_from_constant()
-			? ''
-			: sanitize_text_field( $input['client_secret'] ?? '' );
+		if ( PixelHunter_Google_Login_Settings::secret_from_constant() ) {
+			$out['client_secret'] = '';
+		} else {
+			$submitted = sanitize_text_field( $input['client_secret'] ?? '' );
+			// Blank field means "keep the existing secret" (the field is never pre-filled).
+			$out['client_secret'] = '' !== $submitted
+				? $submitted
+				: (string) PixelHunter_Google_Login_Settings::get()['client_secret'];
+		}
 		return $out;
 	}
 
@@ -109,7 +115,8 @@ class PixelHunter_Google_Login_Admin {
 								<input type="text" id="phgl_client_secret" class="regular-text" value="🔒 <?php esc_attr_e( 'Definido em wp-config.php', 'pixelhunter-google-login' ); ?>" disabled />
 								<p class="description"><?php esc_html_e( 'A constante PIXELHUNTER_GOOGLE_LOGIN_CLIENT_SECRET tem prioridade; este campo fica bloqueado.', 'pixelhunter-google-login' ); ?></p>
 							<?php else : ?>
-								<input type="password" id="phgl_client_secret" class="regular-text" name="<?php echo esc_attr( $opt ); ?>[client_secret]" value="<?php echo esc_attr( $s['client_secret'] ); ?>" autocomplete="off" />
+								<?php $db_secret_exists = '' !== (string) $s['client_secret']; ?>
+								<input type="password" id="phgl_client_secret" class="regular-text" name="<?php echo esc_attr( $opt ); ?>[client_secret]" value="" placeholder="<?php echo esc_attr( $db_secret_exists ? '•••••• (guardado — deixa em branco para manter)' : '' ); ?>" autocomplete="off" />
 								<p class="description"><?php esc_html_e( 'Recomendado: define antes em wp-config.php para não guardar o segredo na base de dados.', 'pixelhunter-google-login' ); ?></p>
 							<?php endif; ?>
 						</td>

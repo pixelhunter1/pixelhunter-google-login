@@ -142,8 +142,12 @@ class PixelHunter_Google_Login_OAuth {
 		$result = ( new PixelHunter_Google_Login_Accounts() )->resolve( $claims );
 
 		if ( 'login' === $result['action'] && $result['user_id'] ) {
+			$user = get_user_by( 'id', (int) $result['user_id'] );
 			wp_set_current_user( (int) $result['user_id'] );
 			wp_set_auth_cookie( (int) $result['user_id'], true );
+			if ( $user ) {
+				do_action( 'wp_login', $user->user_login, $user );
+			}
 			return $this->redirect( wp_validate_redirect( (string) $stored['redirect_to'], $account_url ) );
 		}
 

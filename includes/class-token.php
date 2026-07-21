@@ -73,6 +73,7 @@ class PixelHunter_Google_Login_Token {
 
 		try {
 			$keys    = JWK::parseKeySet( $jwks );
+			JWT::$leeway = 60; // tolerate small clock skew between this host and Google
 			$decoded = (array) JWT::decode( $id_token, $keys );
 		} catch ( \Throwable $e ) {
 			return $fail( 'signature' );
