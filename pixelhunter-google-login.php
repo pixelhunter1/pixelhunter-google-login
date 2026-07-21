@@ -39,6 +39,8 @@ add_action(
 		require_once PIXELHUNTER_GOOGLE_LOGIN_DIR . 'includes/class-oauth.php';
 		( new PixelHunter_Google_Login_OAuth() )->register();
 		( new PixelHunter_Google_Login_Link() )->register();
+		require_once PIXELHUNTER_GOOGLE_LOGIN_DIR . 'includes/class-button.php';
+		( new PixelHunter_Google_Login_Button() )->register();
 		// PHGL_BOOTSTRAP_INIT
 	}
 );
