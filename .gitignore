@@ -1,0 +1,6 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Keep vendor/ committed (code-distributed plugin) — do NOT ignore it.
