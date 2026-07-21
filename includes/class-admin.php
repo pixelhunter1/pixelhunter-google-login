@@ -15,6 +15,12 @@ class PixelHunter_Google_Login_Admin {
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'menu' ) );
 		add_action( 'admin_init', array( $this, 'settings' ) );
+		add_filter(
+			'option_page_capability_' . self::SLUG,
+			function () {
+				return 'manage_woocommerce';
+			}
+		);
 	}
 
 	public function menu(): void {
@@ -68,9 +74,9 @@ class PixelHunter_Google_Login_Admin {
 
 			<h2><?php esc_html_e( 'Configuração', 'pixelhunter-google-login' ); ?></h2>
 			<ol>
-				<li><a href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noopener"><?php esc_html_e( 'Criar / escolher projeto no Google Cloud', 'pixelhunter-google-login' ); ?></a></li>
-				<li><a href="https://console.cloud.google.com/apis/credentials/consent" target="_blank" rel="noopener"><?php esc_html_e( 'Configurar o ecrã de consentimento OAuth (nome + logo “PixelHunter”)', 'pixelhunter-google-login' ); ?></a></li>
-				<li><a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener"><?php esc_html_e( 'Criar credenciais → OAuth client ID → Web application', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/projectcreate' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Criar / escolher projeto no Google Cloud', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/apis/credentials/consent' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Configurar o ecrã de consentimento OAuth (nome + logo “PixelHunter”)', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/apis/credentials' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Criar credenciais → OAuth client ID → Web application', 'pixelhunter-google-login' ); ?></a></li>
 			</ol>
 			<p><strong><?php esc_html_e( 'Redirect URI (cola no Google):', 'pixelhunter-google-login' ); ?></strong></p>
 			<input type="text" readonly onclick="this.select()" value="<?php echo esc_attr( $redirect_uri ); ?>" style="width:100%;max-width:640px;font-family:monospace;" />
