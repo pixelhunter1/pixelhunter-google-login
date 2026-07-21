@@ -41,6 +41,10 @@ add_action(
 		( new PixelHunter_Google_Login_Link() )->register();
 		require_once PIXELHUNTER_GOOGLE_LOGIN_DIR . 'includes/class-button.php';
 		( new PixelHunter_Google_Login_Button() )->register();
+		if ( is_admin() ) {
+			require_once PIXELHUNTER_GOOGLE_LOGIN_DIR . 'includes/class-admin.php';
+			( new PixelHunter_Google_Login_Admin() )->register();
+		}
 		// PHGL_BOOTSTRAP_INIT
 	}
 );
