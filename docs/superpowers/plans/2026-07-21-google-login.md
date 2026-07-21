@@ -1278,6 +1278,14 @@ class PixelHunter_Google_Login_Admin {
 	public function register(): void {
 		add_action( 'admin_menu', array( $this, 'menu' ) );
 		add_action( 'admin_init', array( $this, 'settings' ) );
+		// Align the option-page SAVE capability with the menu/render capability;
+		// otherwise options.php defaults to manage_options and Shop Managers can't save.
+		add_filter(
+			'option_page_capability_' . self::SLUG,
+			function () {
+				return 'manage_woocommerce';
+			}
+		);
 	}
 
 	public function menu(): void {
