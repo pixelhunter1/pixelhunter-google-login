@@ -623,6 +623,7 @@ cd /Users/miguelcarneiro/Studio/pixelhunterclithes/wp-content/plugins/pixelhunte
 
 	/** Create a new customer from Google identity and link the sub. */
 	public static function create_from_google( string $email, string $sub, string $name ): int {
+		$name     = sanitize_text_field( $name ); // Google name is user-controlled; prevent stored XSS via display_name.
 		$base     = sanitize_user( current( explode( '@', $email ) ), true );
 		$username = $base;
 		$i        = 1;
