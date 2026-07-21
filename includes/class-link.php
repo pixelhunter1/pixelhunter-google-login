@@ -48,4 +48,43 @@ class PixelHunter_Google_Login_Link {
 		}
 		setcookie( self::COOKIE, '', array( 'expires' => time() - 3600, 'path' => COOKIEPATH ? COOKIEPATH : '/' ) );
 	}
+
+	public function register(): void {
+		add_action( 'wp_login', array( $this, 'on_login' ), 10, 2 );
+		add_action( 'template_redirect', array( $this, 'maybe_notice' ) );
+	}
+
+	/** After a successful login, if a pending link targets THIS user, attach the sub. */
+	public function on_login( $user_login, $user ): void {
+		$pending = self::pending();
+		if ( $pending && (int) $pending['user_id'] === (int) $user->ID ) {
+			PixelHunter_Google_Login_Accounts::link_sub( (int) $user->ID, (string) $pending['sub'] );
+			self::clear();
+		}
+	}
+
+	/** Surface the confirm-link prompt / error messages as WooCommerce notices. */
+	public function maybe_notice(): void {
+		if ( ! function_exists( 'wc_add_notice' ) || is_admin() ) {
+			return;
+		}
+		if ( isset( $_GET['phgl_link'] ) && ! is_user_logged_in() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			wc_add_notice(
+				__( 'Já existe uma conta com este email. Inicia sessão com a tua password para ligar o Google (ou usa “Esqueceu-se da password?”).', 'pixelhunter-google-login' ),
+				'notice'
+			);
+		} elseif ( isset( $_GET['phgl_error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			wc_add_notice( self::error_message( sanitize_text_field( wp_unslash( $_GET['phgl_error'] ) ) ), 'error' );
+		}
+	}
+
+	protected static function error_message( string $code ): string {
+		if ( 'token_email_verified' === $code ) {
+			return __( 'A tua conta Google não tem o email verificado, por isso não é possível entrar por aqui.', 'pixelhunter-google-login' );
+		}
+		if ( 'reject' === $code ) {
+			return __( 'Não foi possível iniciar sessão com o Google.', 'pixelhunter-google-login' );
+		}
+		return __( 'O início de sessão com o Google falhou. Tenta novamente.', 'pixelhunter-google-login' );
+	}
 }
