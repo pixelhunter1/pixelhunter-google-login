@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- `Requires PHP: 8.0` (firebase/php-jwt v6 needs PHP ≥ 8.0), `Requires at least: 6.0`.
+- `Requires PHP: 8.0` (firebase/php-jwt needs PHP ≥ 8.0), `Requires at least: 6.0`.
 - Plugin header MUST include `Update URI: false`.
 - **All `wp` commands run through `studio wp`** (Studio site).
 - **Do NOT auto-commit feature/layout changes** beyond the commit steps written in this plan; the plan's commits are explicit and expected. Never `git push` unless asked.
@@ -235,9 +235,9 @@ cd /Users/miguelcarneiro/Studio/pixelhunterclithes/wp-content/plugins/pixelhunte
 
 Run:
 ```bash
-cd /Users/miguelcarneiro/Studio/pixelhunterclithes/wp-content/plugins/pixelhunter-google-login && composer require firebase/php-jwt:^6.10
+cd /Users/miguelcarneiro/Studio/pixelhunterclithes/wp-content/plugins/pixelhunter-google-login && composer require firebase/php-jwt:^7.0
 ```
-Expected: creates `composer.json`, `composer.lock`, `vendor/firebase/php-jwt/`, `vendor/autoload.php`.
+Expected: creates `composer.json`, `composer.lock`, `vendor/firebase/php-jwt/` (v7.1.0), `vendor/autoload.php`. Note: v7 (not v6) is required because Composer's advisory policy blocks every 6.x release (advisory PKSA-y2cr-5h3j-g3ys); v7 is API-identical for our `JWK::parseKeySet()` / `JWT::decode()` calls and keeps the PHP ^8.0 floor.
 
 - [ ] **Step 2: Load Composer autoload from the bootstrap**
 

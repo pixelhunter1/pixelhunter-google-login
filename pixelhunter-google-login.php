@@ -23,6 +23,10 @@ define( 'PIXELHUNTER_GOOGLE_LOGIN_URL', plugin_dir_url( __FILE__ ) );
 
 require_once PIXELHUNTER_GOOGLE_LOGIN_DIR . 'includes/class-settings.php';
 
+if ( is_readable( PIXELHUNTER_GOOGLE_LOGIN_DIR . 'vendor/autoload.php' ) ) {
+	require_once PIXELHUNTER_GOOGLE_LOGIN_DIR . 'vendor/autoload.php';
+}
+
 /**
  * Bootstrap. Later tasks add require_once + init lines below this marker.
  */
