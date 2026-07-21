@@ -55,6 +55,7 @@ class PixelHunter_Google_Login_Accounts {
 
 	/** Create a new customer from Google identity and link the sub. */
 	public static function create_from_google( string $email, string $sub, string $name ): int {
+		$name     = sanitize_text_field( $name );
 		$base     = sanitize_user( current( explode( '@', $email ) ), true );
 		$username = $base;
 		$i        = 1;
