@@ -41,4 +41,8 @@ $noemail = $valid; unset( $noemail['email'] );
 $r = PixelHunter_Google_Login_Token::validate_claims( $noemail, $aud, $nonce, $now );
 phgl_assert( false === $r['ok'] && 'email' === $r['error'], 'missing email rejected' );
 
+$nosub = $valid; unset( $nosub['sub'] );
+$r = PixelHunter_Google_Login_Token::validate_claims( $nosub, $aud, $nonce, $now );
+phgl_assert( false === $r['ok'] && 'sub' === $r['error'], 'missing sub rejected' );
+
 phgl_summary();
