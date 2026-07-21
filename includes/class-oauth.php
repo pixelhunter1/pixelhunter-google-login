@@ -30,6 +30,16 @@ class PixelHunter_Google_Login_OAuth {
 				'permission_callback' => '__return_true',
 			)
 		);
+
+		register_rest_route(
+			$ns,
+			'/callback',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $this, 'route_callback' ),
+				'permission_callback' => '__return_true',
+			)
+		);
 	}
 
 	public function route_start( WP_REST_Request $request ) {
@@ -92,5 +102,82 @@ class PixelHunter_Google_Login_OAuth {
 	protected function redirect( string $url ) {
 		wp_redirect( $url ); // Google URL / same-host account URL; not user-controlled beyond validated redirect_to.
 		exit;
+	}
+
+	public function route_callback( WP_REST_Request $request ) {
+		$account_url = wc_get_page_permalink( 'myaccount' );
+
+		// Consume the state store + cookie immediately (single use).
+		$cookie_id = isset( $_COOKIE[ self::COOKIE ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE ] ) ) : '';
+		$stored    = $cookie_id ? get_transient( self::STATE_PREFIX . $cookie_id ) : false;
+		if ( $cookie_id ) {
+			delete_transient( self::STATE_PREFIX . $cookie_id );
+		}
+		$this->clear_cookie( self::COOKIE );
+
+		$state = sanitize_text_field( (string) $request->get_param( 'state' ) );
+		$code  = sanitize_text_field( (string) $request->get_param( 'code' ) );
+
+		if ( ! is_array( $stored ) || '' === $state || ! hash_equals( (string) $stored['state'], $state ) ) {
+			return $this->fail( $account_url, 'state' );
+		}
+		if ( '' === $code ) {
+			return $this->fail( $account_url, 'code' );
+		}
+
+		$id_token = $this->exchange_code( $code );
+		if ( '' === $id_token ) {
+			return $this->fail( $account_url, 'exchange' );
+		}
+
+		$claims = PixelHunter_Google_Login_Token::decode(
+			$id_token,
+			PixelHunter_Google_Login_Settings::client_id(),
+			(string) $stored['nonce']
+		);
+		if ( empty( $claims['ok'] ) ) {
+			return $this->fail( $account_url, 'token_' . ( $claims['error'] ?? 'unknown' ) );
+		}
+
+		$result = ( new PixelHunter_Google_Login_Accounts() )->resolve( $claims );
+
+		if ( 'login' === $result['action'] && $result['user_id'] ) {
+			wp_set_current_user( (int) $result['user_id'] );
+			wp_set_auth_cookie( (int) $result['user_id'], true );
+			return $this->redirect( wp_validate_redirect( (string) $stored['redirect_to'], $account_url ) );
+		}
+
+		if ( 'confirm_link' === $result['action'] && $result['user_id'] ) {
+			PixelHunter_Google_Login_Link::put( (int) $result['user_id'], (string) $claims['sub'] );
+			return $this->redirect( add_query_arg( 'phgl_link', '1', $account_url ) );
+		}
+
+		return $this->fail( $account_url, 'reject' );
+	}
+
+	/** Exchange the authorization code for tokens; returns the id_token or ''. */
+	protected function exchange_code( string $code ): string {
+		$resp = wp_remote_post(
+			self::TOKEN_URL,
+			array(
+				'timeout' => 15,
+				'body'    => array(
+					'code'          => $code,
+					'client_id'     => PixelHunter_Google_Login_Settings::client_id(),
+					'client_secret' => PixelHunter_Google_Login_Settings::client_secret(),
+					'redirect_uri'  => PixelHunter_Google_Login_Settings::redirect_uri(),
+					'grant_type'    => 'authorization_code',
+				),
+			)
+		);
+		if ( is_wp_error( $resp ) || 200 !== wp_remote_retrieve_response_code( $resp ) ) {
+			return '';
+		}
+		$data = json_decode( wp_remote_retrieve_body( $resp ), true );
+		return ( is_array( $data ) && ! empty( $data['id_token'] ) ) ? (string) $data['id_token'] : '';
+	}
+
+	protected function fail( string $account_url, string $code ) {
+		return $this->redirect( add_query_arg( 'phgl_error', rawurlencode( $code ), $account_url ) );
 	}
 }
