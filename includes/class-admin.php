@@ -79,12 +79,15 @@ class PixelHunter_Google_Login_Admin {
 			<h1><?php esc_html_e( 'Login com Google', 'pixelhunter-google-login' ); ?></h1>
 
 			<h2><?php esc_html_e( 'Configuração', 'pixelhunter-google-login' ); ?></h2>
+			<p><?php esc_html_e( 'No Google Cloud Console, no menu “Google Auth Platform”, segue por esta ordem:', 'pixelhunter-google-login' ); ?></p>
 			<ol>
-				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/projectcreate' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Criar / escolher projeto no Google Cloud', 'pixelhunter-google-login' ); ?></a></li>
-				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/apis/credentials/consent' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Configurar o ecrã de consentimento OAuth (nome + logo “PixelHunter”)', 'pixelhunter-google-login' ); ?></a></li>
-				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/apis/credentials' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Criar credenciais → OAuth client ID → Web application', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/projectcreate' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Criar / escolher um projeto', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/branding' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Branding — definir o nome e o logótipo da app (o que o utilizador vê no ecrã do Google)', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/audience' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Público-alvo → Utilizadores de teste → adicionar o teu email (necessário para testar antes de publicar)', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/clients' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Clientes → Criar cliente → tipo “Aplicação Web” → colar o Redirect URI (abaixo)', 'pixelhunter-google-login' ); ?></a></li>
 			</ol>
-			<p><strong><?php esc_html_e( 'Redirect URI (cola no Google):', 'pixelhunter-google-login' ); ?></strong></p>
+			<p><?php esc_html_e( 'Ao criar o cliente (passo 4), o Google mostra o Client ID e o Client Secret — cola-os no formulário mais abaixo.', 'pixelhunter-google-login' ); ?></p>
+			<p><strong><?php esc_html_e( 'Redirect URI (cola no passo 4, em “URIs de redirecionamento autorizados”):', 'pixelhunter-google-login' ); ?></strong></p>
 			<input type="text" readonly onclick="this.select()" value="<?php echo esc_attr( $redirect_uri ); ?>" style="width:100%;max-width:640px;font-family:monospace;" />
 
 			<h2><?php esc_html_e( 'Estado', 'pixelhunter-google-login' ); ?></h2>
