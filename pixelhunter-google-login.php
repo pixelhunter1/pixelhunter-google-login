@@ -6,6 +6,8 @@
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Text Domain: pixelhunter-google-login
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Update URI: false
  *
  * Update URI: false impede o WordPress.org de sequestrar o slug numa atualização —
