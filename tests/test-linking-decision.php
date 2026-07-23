@@ -2,7 +2,7 @@
 require __DIR__ . '/assert.php';
 require dirname( __DIR__ ) . '/includes/class-accounts.php';
 
-$A = 'PixelHunter_Google_Login_Accounts';
+$A = 'PixelHunter_Login_Accounts';
 
 $r = $A::decide( false, null, null );
 phgl_assert( 'reject' === $r['action'], 'email_verified=false -> reject' );

@@ -1,65 +1,79 @@
 <?php
 /**
- * Config accessor. The Client Secret ALWAYS prefers the wp-config constant.
+ * Config accessor por provider. O Client Secret prefere SEMPRE a constante do
+ * wp-config quando definida.
  *
  * @package PixelHunter_Google_Login
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class PixelHunter_Google_Login_Settings {
+class PixelHunter_Login_Settings {
 
-	const OPTION          = 'pixelhunter_google_login_settings';
-	const SECRET_CONSTANT = 'PIXELHUNTER_GOOGLE_LOGIN_CLIENT_SECRET';
-	const REST_NAMESPACE  = 'pixelhunter-google-login/v1';
+	// Legado: o Redirect URI do Google registado na consola usa este namespace.
+	const REST_NAMESPACE = 'pixelhunter-google-login/v1';
 
-	/** Merged settings with defaults. */
-	public static function get(): array {
+	const APPEARANCE_OPTION = 'pixelhunter_login_appearance';
+
+	/** Settings do provider, com defaults. */
+	public static function get( array $provider ): array {
 		$defaults = array(
 			'enabled'       => false,
 			'client_id'     => '',
 			'client_secret' => '',
-			'button_theme'  => 'light',
 		);
-		$saved = get_option( self::OPTION, array() );
+		$saved    = get_option( $provider['option'], array() );
 		return wp_parse_args( is_array( $saved ) ? $saved : array(), $defaults );
 	}
 
-	public static function is_enabled(): bool {
-		return (bool) self::get()['enabled'];
+	public static function is_enabled( array $provider ): bool {
+		return (bool) self::get( $provider )['enabled'];
 	}
 
-	public static function client_id(): string {
-		return (string) self::get()['client_id'];
+	public static function client_id( array $provider ): string {
+		return (string) self::get( $provider )['client_id'];
 	}
 
-	/** Constant wins; falls back to the stored value. */
-	public static function client_secret(): string {
-		if ( self::secret_from_constant() ) {
-			return (string) constant( self::SECRET_CONSTANT );
+	/** Ativo E com Client ID — o mínimo para o botão/rotas funcionarem. */
+	public static function is_ready( array $provider ): bool {
+		return self::is_enabled( $provider ) && '' !== self::client_id( $provider );
+	}
+
+	/** A constante ganha; cai para o valor guardado. */
+	public static function client_secret( array $provider ): string {
+		if ( self::secret_from_constant( $provider ) ) {
+			return (string) constant( $provider['secret_constant'] );
 		}
-		return (string) self::get()['client_secret'];
+		return (string) self::get( $provider )['client_secret'];
 	}
 
-	public static function secret_from_constant(): bool {
-		return defined( self::SECRET_CONSTANT ) && '' !== (string) constant( self::SECRET_CONSTANT );
+	public static function secret_from_constant( array $provider ): bool {
+		return defined( $provider['secret_constant'] ) && '' !== (string) constant( $provider['secret_constant'] );
 	}
 
+	/** Tema partilhado pelos botões. */
 	public static function button_theme(): string {
-		return 'dark' === self::get()['button_theme'] ? 'dark' : 'light';
+		$saved = get_option( self::APPEARANCE_OPTION, array() );
+		$theme = is_array( $saved ) ? (string) ( $saved['button_theme'] ?? '' ) : '';
+		if ( '' === $theme ) {
+			// Fallback legado: o tema vivia dentro da opção do Google.
+			$google = PixelHunter_Login_Providers::get( 'google' );
+			$theme  = (string) ( self::get( $google )['button_theme'] ?? '' );
+		}
+		return 'dark' === $theme ? 'dark' : 'light';
 	}
 
-	/** The Redirect URI to register in Google Cloud Console. */
-	public static function redirect_uri(): string {
-		return rest_url( self::REST_NAMESPACE . '/callback' );
+	/** O Redirect URI a registar na consola do provider. */
+	public static function redirect_uri( array $provider ): string {
+		return rest_url( self::REST_NAMESPACE . $provider['callback_path'] );
 	}
 
-	/** URL the button points at; carries the origin to return to. */
-	public static function start_url( string $redirect_to ): string {
+	/** URL do botão; transporta a origem para onde voltar. */
+	public static function start_url( array $provider, string $redirect_to ): string {
 		return add_query_arg(
 			'redirect_to',
 			rawurlencode( $redirect_to ),
-			rest_url( self::REST_NAMESPACE . '/start' )
+			rest_url( self::REST_NAMESPACE . $provider['start_path'] )
 		);
 	}
 }

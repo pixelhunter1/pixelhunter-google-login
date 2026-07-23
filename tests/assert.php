@@ -1,7 +1,14 @@
 <?php
 // Minimal test harness for pure-logic files. Defines a dummy ABSPATH so the
-// `defined('ABSPATH') || exit;` guard in included class files does not exit.
+// `defined('ABSPATH') || exit;` guard in included class files does not exit,
+// and a `__()` shim so the providers registry loads without WordPress.
 defined( 'ABSPATH' ) || define( 'ABSPATH', __DIR__ . '/' );
+
+if ( ! function_exists( '__' ) ) {
+	function __( string $text, string $domain = 'default' ): string {
+		return $text;
+	}
+}
 
 $GLOBALS['phgl_pass'] = 0;
 $GLOBALS['phgl_fail'] = 0;

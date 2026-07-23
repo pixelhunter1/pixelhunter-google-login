@@ -1,49 +1,54 @@
 <?php
 /**
- * OAuth endpoints. /start builds the Google authorization redirect; /callback
- * (Task 7) handles the return.
+ * Endpoints OAuth por provider: {start_path} constrói o redirect de
+ * autorização; {callback_path} trata o regresso. As rotas vêm do registry —
+ * este ficheiro não conhece nenhum provider em concreto.
  *
  * @package PixelHunter_Google_Login
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class PixelHunter_Google_Login_OAuth {
+class PixelHunter_Login_OAuth {
 
-	const COOKIE     = 'phgl_oauth';
-	const AUTH_URL   = 'https://accounts.google.com/o/oauth2/v2/auth';
-	const TOKEN_URL  = 'https://oauth2.googleapis.com/token';
-	const STATE_PREFIX = 'pixelhunter_google_state_';
+	const COOKIE       = 'phgl_oauth';
+	const STATE_PREFIX = 'pixelhunter_login_state_';
 
 	public function register(): void {
 		add_action( 'rest_api_init', array( $this, 'routes' ) );
 	}
 
 	public function routes(): void {
-		$ns = PixelHunter_Google_Login_Settings::REST_NAMESPACE;
-		register_rest_route(
-			$ns,
-			'/start',
-			array(
-				'methods'             => 'GET',
-				'callback'            => array( $this, 'route_start' ),
-				'permission_callback' => '__return_true',
-			)
-		);
+		$ns = PixelHunter_Login_Settings::REST_NAMESPACE;
+		foreach ( PixelHunter_Login_Providers::all() as $provider ) {
+			register_rest_route(
+				$ns,
+				$provider['start_path'],
+				array(
+					'methods'             => 'GET',
+					'callback'            => function ( WP_REST_Request $request ) use ( $provider ) {
+						return $this->route_start( $provider, $request );
+					},
+					'permission_callback' => '__return_true',
+				)
+			);
 
-		register_rest_route(
-			$ns,
-			'/callback',
-			array(
-				'methods'             => 'GET',
-				'callback'            => array( $this, 'route_callback' ),
-				'permission_callback' => '__return_true',
-			)
-		);
+			register_rest_route(
+				$ns,
+				$provider['callback_path'],
+				array(
+					'methods'             => 'GET',
+					'callback'            => function ( WP_REST_Request $request ) use ( $provider ) {
+						return $this->route_callback( $provider, $request );
+					},
+					'permission_callback' => '__return_true',
+				)
+			);
+		}
 	}
 
-	public function route_start( WP_REST_Request $request ) {
-		if ( ! PixelHunter_Google_Login_Settings::is_enabled() || '' === PixelHunter_Google_Login_Settings::client_id() ) {
+	public function route_start( array $provider, WP_REST_Request $request ) {
+		if ( ! PixelHunter_Login_Settings::is_ready( $provider ) ) {
 			return $this->redirect( wc_get_page_permalink( 'myaccount' ) );
 		}
 
@@ -57,6 +62,7 @@ class PixelHunter_Google_Login_OAuth {
 		set_transient(
 			self::STATE_PREFIX . $id,
 			array(
+				'provider'    => $provider['slug'],
 				'state'       => $state,
 				'nonce'       => $nonce,
 				'redirect_to' => $redirect_to,
@@ -66,17 +72,18 @@ class PixelHunter_Google_Login_OAuth {
 		$this->set_cookie( self::COOKIE, $id );
 
 		$url = add_query_arg(
-			array(
-				'client_id'     => rawurlencode( PixelHunter_Google_Login_Settings::client_id() ),
-				'redirect_uri'  => rawurlencode( PixelHunter_Google_Login_Settings::redirect_uri() ),
-				'response_type' => 'code',
-				'scope'         => rawurlencode( 'openid email profile' ),
-				'state'         => $state,
-				'nonce'         => $nonce,
-				'prompt'        => 'select_account',
-				'access_type'   => 'online',
+			array_merge(
+				array(
+					'client_id'     => rawurlencode( PixelHunter_Login_Settings::client_id( $provider ) ),
+					'redirect_uri'  => rawurlencode( PixelHunter_Login_Settings::redirect_uri( $provider ) ),
+					'response_type' => 'code',
+					'scope'         => rawurlencode( 'openid email profile' ),
+					'state'         => $state,
+					'nonce'         => $nonce,
+				),
+				$provider['extra_auth_args']
 			),
-			self::AUTH_URL
+			$provider['auth_url']
 		);
 		return $this->redirect( $url );
 	}
@@ -100,14 +107,14 @@ class PixelHunter_Google_Login_OAuth {
 	}
 
 	protected function redirect( string $url ) {
-		wp_redirect( $url ); // Google URL / same-host account URL; not user-controlled beyond validated redirect_to.
+		wp_redirect( $url ); // URL do provider / URL da conta no mesmo host; não controlado pelo utilizador além do redirect_to validado.
 		exit;
 	}
 
-	public function route_callback( WP_REST_Request $request ) {
+	public function route_callback( array $provider, WP_REST_Request $request ) {
 		$account_url = wc_get_page_permalink( 'myaccount' );
 
-		// Consume the state store + cookie immediately (single use).
+		// Consome o state store + cookie imediatamente (uso único).
 		$cookie_id = isset( $_COOKIE[ self::COOKIE ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE ] ) ) : '';
 		$stored    = $cookie_id ? get_transient( self::STATE_PREFIX . $cookie_id ) : false;
 		if ( $cookie_id ) {
@@ -119,27 +126,32 @@ class PixelHunter_Google_Login_OAuth {
 		$code  = sanitize_text_field( (string) $request->get_param( 'code' ) );
 
 		if ( ! is_array( $stored ) || '' === $state || ! hash_equals( (string) $stored['state'], $state ) ) {
-			return $this->fail( $account_url, 'state' );
+			return $this->fail( $account_url, $provider, 'state' );
+		}
+		// O fluxo tem de terminar no provider em que começou.
+		if ( ( $stored['provider'] ?? '' ) !== $provider['slug'] ) {
+			return $this->fail( $account_url, $provider, 'state' );
 		}
 		if ( '' === $code ) {
-			return $this->fail( $account_url, 'code' );
+			return $this->fail( $account_url, $provider, 'code' );
 		}
 
-		$id_token = $this->exchange_code( $code );
+		$id_token = $this->exchange_code( $provider, $code );
 		if ( '' === $id_token ) {
-			return $this->fail( $account_url, 'exchange' );
+			return $this->fail( $account_url, $provider, 'exchange' );
 		}
 
-		$claims = PixelHunter_Google_Login_Token::decode(
+		$claims = PixelHunter_Login_Token::decode(
 			$id_token,
-			PixelHunter_Google_Login_Settings::client_id(),
+			$provider,
+			PixelHunter_Login_Settings::client_id( $provider ),
 			(string) $stored['nonce']
 		);
 		if ( empty( $claims['ok'] ) ) {
-			return $this->fail( $account_url, 'token_' . ( $claims['error'] ?? 'unknown' ) );
+			return $this->fail( $account_url, $provider, 'token_' . ( $claims['error'] ?? 'unknown' ) );
 		}
 
-		$result = ( new PixelHunter_Google_Login_Accounts() )->resolve( $claims );
+		$result = ( new PixelHunter_Login_Accounts() )->resolve( $provider, $claims );
 
 		if ( 'login' === $result['action'] && $result['user_id'] ) {
 			$user = get_user_by( 'id', (int) $result['user_id'] );
@@ -152,24 +164,24 @@ class PixelHunter_Google_Login_OAuth {
 		}
 
 		if ( 'confirm_link' === $result['action'] && $result['user_id'] ) {
-			PixelHunter_Google_Login_Link::put( (int) $result['user_id'], (string) $claims['sub'] );
-			return $this->redirect( add_query_arg( 'phgl_link', '1', $account_url ) );
+			PixelHunter_Login_Link::put( (int) $result['user_id'], (string) $claims['sub'], $provider['slug'] );
+			return $this->redirect( add_query_arg( 'phgl_link', $provider['slug'], $account_url ) );
 		}
 
-		return $this->fail( $account_url, 'reject' );
+		return $this->fail( $account_url, $provider, 'reject' );
 	}
 
-	/** Exchange the authorization code for tokens; returns the id_token or ''. */
-	protected function exchange_code( string $code ): string {
+	/** Troca o authorization code por tokens; devolve o id_token ou ''. */
+	protected function exchange_code( array $provider, string $code ): string {
 		$resp = wp_remote_post(
-			self::TOKEN_URL,
+			$provider['token_url'],
 			array(
 				'timeout' => 15,
 				'body'    => array(
 					'code'          => $code,
-					'client_id'     => PixelHunter_Google_Login_Settings::client_id(),
-					'client_secret' => PixelHunter_Google_Login_Settings::client_secret(),
-					'redirect_uri'  => PixelHunter_Google_Login_Settings::redirect_uri(),
+					'client_id'     => PixelHunter_Login_Settings::client_id( $provider ),
+					'client_secret' => PixelHunter_Login_Settings::client_secret( $provider ),
+					'redirect_uri'  => PixelHunter_Login_Settings::redirect_uri( $provider ),
 					'grant_type'    => 'authorization_code',
 				),
 			)
@@ -181,7 +193,15 @@ class PixelHunter_Google_Login_OAuth {
 		return ( is_array( $data ) && ! empty( $data['id_token'] ) ) ? (string) $data['id_token'] : '';
 	}
 
-	protected function fail( string $account_url, string $code ) {
-		return $this->redirect( add_query_arg( 'phgl_error', rawurlencode( $code ), $account_url ) );
+	protected function fail( string $account_url, array $provider, string $code ) {
+		return $this->redirect(
+			add_query_arg(
+				array(
+					'phgl_error'    => rawurlencode( $code ),
+					'phgl_provider' => $provider['slug'],
+				),
+				$account_url
+			)
+		);
 	}
 }

@@ -1,23 +1,31 @@
 <?php
 /**
- * Pending-link token: bridges the callback (which detected an existing email)
- * to the moment the user proves ownership by logging in. Task 8 adds the
- * wp_login linker + the account-page notice.
+ * Token de link pendente: faz a ponte entre o callback (que detetou um email
+ * já existente) e o momento em que o utilizador prova a posse fazendo login.
+ * Guarda o provider para ligar a meta certa.
  *
  * @package PixelHunter_Google_Login
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class PixelHunter_Google_Login_Link {
+class PixelHunter_Login_Link {
 
 	const COOKIE = 'phgl_link';
-	const PREFIX = 'pixelhunter_google_link_';
+	const PREFIX = 'pixelhunter_login_link_';
 
-	/** Store a pending link (user to attach the sub to) for ~15 min. */
-	public static function put( int $user_id, string $sub ): void {
+	/** Guarda um link pendente (utilizador a quem ligar o sub) por ~15 min. */
+	public static function put( int $user_id, string $sub, string $provider_slug ): void {
 		$id = wp_generate_password( 32, false );
-		set_transient( self::PREFIX . $id, array( 'user_id' => $user_id, 'sub' => $sub ), 15 * MINUTE_IN_SECONDS );
+		set_transient(
+			self::PREFIX . $id,
+			array(
+				'user_id'  => $user_id,
+				'sub'      => $sub,
+				'provider' => $provider_slug,
+			),
+			15 * MINUTE_IN_SECONDS
+		);
 		setcookie(
 			self::COOKIE,
 			$id,
@@ -31,7 +39,7 @@ class PixelHunter_Google_Login_Link {
 		);
 	}
 
-	/** @return array{user_id:int,sub:string}|null */
+	/** @return array{user_id:int,sub:string,provider:string}|null */
 	public static function pending(): ?array {
 		$id = isset( $_COOKIE[ self::COOKIE ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE ] ) ) : '';
 		if ( '' === $id ) {
@@ -54,37 +62,58 @@ class PixelHunter_Google_Login_Link {
 		add_action( 'template_redirect', array( $this, 'maybe_notice' ) );
 	}
 
-	/** After a successful login, if a pending link targets THIS user, attach the sub. */
+	/** Após login com sucesso, se um link pendente aponta para ESTE utilizador, liga o sub. */
 	public function on_login( $user_login, $user ): void {
 		$pending = self::pending();
-		if ( $pending && (int) $pending['user_id'] === (int) $user->ID ) {
-			PixelHunter_Google_Login_Accounts::link_sub( (int) $user->ID, (string) $pending['sub'] );
-			self::clear();
+		if ( ! $pending || (int) $pending['user_id'] !== (int) $user->ID ) {
+			return;
 		}
+		$provider = PixelHunter_Login_Providers::get( (string) ( $pending['provider'] ?? '' ) );
+		if ( $provider ) {
+			PixelHunter_Login_Accounts::link_sub( $provider, (int) $user->ID, (string) $pending['sub'] );
+		}
+		self::clear();
 	}
 
-	/** Surface the confirm-link prompt / error messages as WooCommerce notices. */
+	/** Mostra o aviso de confirm-link / mensagens de erro como notices WooCommerce. */
 	public function maybe_notice(): void {
 		if ( ! function_exists( 'wc_add_notice' ) || is_admin() ) {
 			return;
 		}
-		if ( isset( $_GET['phgl_link'] ) && ! is_user_logged_in() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- parâmetros de redirect OAuth, só leitura para mensagens.
+		if ( isset( $_GET['phgl_link'] ) && ! is_user_logged_in() ) {
+			$label = self::provider_label( sanitize_text_field( wp_unslash( $_GET['phgl_link'] ) ) );
 			wc_add_notice(
-				__( 'Já existe uma conta com este email. Inicia sessão com a tua password para ligar o Google (ou usa “Esqueceu-se da password?”).', 'pixelhunter-google-login' ),
+				sprintf(
+					/* translators: %s: nome do provider (Google/Microsoft). */
+					__( 'Já existe uma conta com este email. Inicia sessão com a tua password para ligar o %s (ou usa “Esqueceu-se da password?”).', 'pixelhunter-google-login' ),
+					$label
+				),
 				'notice'
 			);
-		} elseif ( isset( $_GET['phgl_error'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			wc_add_notice( self::error_message( sanitize_text_field( wp_unslash( $_GET['phgl_error'] ) ) ), 'error' );
+		} elseif ( isset( $_GET['phgl_error'] ) ) {
+			$label = self::provider_label( isset( $_GET['phgl_provider'] ) ? sanitize_text_field( wp_unslash( $_GET['phgl_provider'] ) ) : '' );
+			wc_add_notice( self::error_message( sanitize_text_field( wp_unslash( $_GET['phgl_error'] ) ), $label ), 'error' );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 	}
 
-	protected static function error_message( string $code ): string {
+	/** Nome apresentável do provider; fallback genérico para slugs desconhecidos. */
+	protected static function provider_label( string $slug ): string {
+		$provider = PixelHunter_Login_Providers::get( $slug );
+		return $provider ? $provider['label'] : 'Google';
+	}
+
+	protected static function error_message( string $code, string $label ): string {
 		if ( 'token_email_verified' === $code ) {
-			return __( 'A tua conta Google não tem o email verificado, por isso não é possível entrar por aqui.', 'pixelhunter-google-login' );
+			/* translators: %s: nome do provider (Google/Microsoft). */
+			return sprintf( __( 'A tua conta %s não tem o email verificado, por isso não é possível entrar por aqui.', 'pixelhunter-google-login' ), $label );
 		}
 		if ( 'reject' === $code ) {
-			return __( 'Não foi possível iniciar sessão com o Google.', 'pixelhunter-google-login' );
+			/* translators: %s: nome do provider (Google/Microsoft). */
+			return sprintf( __( 'Não foi possível iniciar sessão com o %s.', 'pixelhunter-google-login' ), $label );
 		}
-		return __( 'O início de sessão com o Google falhou. Tenta novamente.', 'pixelhunter-google-login' );
+		/* translators: %s: nome do provider (Google/Microsoft). */
+		return sprintf( __( 'O início de sessão com o %s falhou. Tenta novamente.', 'pixelhunter-google-login' ), $label );
 	}
 }

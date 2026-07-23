@@ -1,0 +1,38 @@
+.phl-wrap .nav-tab-wrapper { margin-bottom: 0; }
+
+.phl-grid {
+	display: grid;
+	grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+	gap: 20px;
+	align-items: start;
+	max-width: 1200px;
+	margin-top: 20px;
+}
+.phl-grid--single { grid-template-columns: minmax(0, 1fr); max-width: 720px; }
+@media (max-width: 1100px) {
+	.phl-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.phl-card {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgba( 0, 0, 0, 0.04 );
+	padding: 8px 24px 24px;
+}
+.phl-card h2 { font-size: 14px; margin: 24px 0 8px; }
+.phl-card h2:first-of-type { margin-top: 16px; }
+.phl-card--aside ol { margin: 8px 0 0 20px; }
+.phl-card--aside li { margin-bottom: 6px; }
+
+.phl-uri {
+	width: 100%;
+	font-family: Consolas, Monaco, monospace;
+	font-size: 12px;
+	padding: 6px 8px;
+}
+
+.phl-status { margin: 8px 0 0; }
+.phl-status__item { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; }
+.phl-status__item .dashicons { font-size: 18px; width: 18px; height: 18px; }
+.phl-status__item--ok .dashicons { color: #00a32a; }
+.phl-status__item--off .dashicons { color: #d63638; }

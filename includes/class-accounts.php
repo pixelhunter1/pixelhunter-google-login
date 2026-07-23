@@ -1,20 +1,17 @@
 <?php
 /**
- * Account resolution. `decide()` is pure; WordPress lookups/creation are added
- * in Task 5.
+ * Resolução de contas. `decide()` é pura; as pesquisas/criação em WordPress
+ * usam as meta keys do provider (uma identidade ligada por provider).
  *
  * @package PixelHunter_Google_Login
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class PixelHunter_Google_Login_Accounts {
-
-	const META_SUB       = '_pixelhunter_google_sub';
-	const META_LINKED_AT = '_pixelhunter_google_linked_at';
+class PixelHunter_Login_Accounts {
 
 	/**
-	 * Decide what to do given identity signals. Pure: no WordPress calls.
+	 * Decide o que fazer dados os sinais de identidade. Pura: sem WordPress.
 	 *
 	 * @return array{action:string,user_id:?int}
 	 */
@@ -31,14 +28,14 @@ class PixelHunter_Google_Login_Accounts {
 		return array( 'action' => 'confirm_link', 'user_id' => $uid_by_email );
 	}
 
-	/** User ID whose linked Google sub matches, or null. */
-	public static function find_by_sub( string $sub ): ?int {
+	/** User ID cujo sub ligado deste provider coincide, ou null. */
+	public static function find_by_sub( array $provider, string $sub ): ?int {
 		if ( '' === $sub ) {
 			return null;
 		}
 		$users = get_users(
 			array(
-				'meta_key'   => self::META_SUB,
+				'meta_key'   => $provider['meta_sub'],
 				'meta_value' => $sub,
 				'number'     => 1,
 				'fields'     => 'ID',
@@ -47,14 +44,14 @@ class PixelHunter_Google_Login_Accounts {
 		return $users ? (int) $users[0] : null;
 	}
 
-	/** User ID for an email, or null. */
+	/** User ID para um email, ou null. */
 	public static function find_by_email( string $email ): ?int {
 		$user = get_user_by( 'email', $email );
 		return $user ? (int) $user->ID : null;
 	}
 
-	/** Create a new customer from Google identity and link the sub. */
-	public static function create_from_google( string $email, string $sub, string $name ): int {
+	/** Cria um novo customer a partir da identidade do provider e liga o sub. */
+	public static function create( array $provider, string $email, string $sub, string $name ): int {
 		$name     = sanitize_text_field( $name );
 		$base     = sanitize_user( current( explode( '@', $email ) ), true );
 		$username = $base;
@@ -76,32 +73,33 @@ class PixelHunter_Google_Login_Accounts {
 		if ( is_wp_error( $user_id ) ) {
 			return 0;
 		}
-		self::link_sub( (int) $user_id, $sub );
+		self::link_sub( $provider, (int) $user_id, $sub );
 		return (int) $user_id;
 	}
 
-	/** Attach a Google sub to a user. */
-	public static function link_sub( int $user_id, string $sub ): void {
-		update_user_meta( $user_id, self::META_SUB, $sub );
-		update_user_meta( $user_id, self::META_LINKED_AT, time() );
+	/** Liga o sub do provider a um utilizador. */
+	public static function link_sub( array $provider, int $user_id, string $sub ): void {
+		update_user_meta( $user_id, $provider['meta_sub'], $sub );
+		update_user_meta( $user_id, $provider['meta_linked_at'], time() );
 	}
 
 	/**
-	 * Resolve verified Google claims into an action. Executes login/create;
-	 * returns intent for confirm_link/reject (handled by the caller).
+	 * Resolve claims verificadas numa ação. Executa login/create; devolve a
+	 * intenção para confirm_link/reject (tratados pelo caller).
 	 *
-	 * @param array $claims Result of Token::validate_claims (must be ok=true).
+	 * @param array $provider Definição do provider.
+	 * @param array $claims   Resultado de Token::validate_claims (tem de ser ok=true).
 	 * @return array{action:string,user_id:?int}
 	 */
-	public function resolve( array $claims ): array {
+	public function resolve( array $provider, array $claims ): array {
 		$decision = self::decide(
 			true,
-			self::find_by_sub( (string) $claims['sub'] ),
+			self::find_by_sub( $provider, (string) $claims['sub'] ),
 			self::find_by_email( (string) $claims['email'] )
 		);
 
 		if ( 'create' === $decision['action'] ) {
-			$user_id = self::create_from_google( (string) $claims['email'], (string) $claims['sub'], (string) ( $claims['name'] ?? '' ) );
+			$user_id             = self::create( $provider, (string) $claims['email'], (string) $claims['sub'], (string) ( $claims['name'] ?? '' ) );
 			$decision['user_id'] = $user_id ?: null;
 			$decision['action']  = $user_id ? 'login' : 'reject';
 		}
