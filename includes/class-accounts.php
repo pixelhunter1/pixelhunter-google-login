@@ -15,10 +15,7 @@ class PixelHunter_Login_Accounts {
 	 *
 	 * @return array{action:string,user_id:?int}
 	 */
-	public static function decide( bool $email_verified, ?int $uid_by_sub, ?int $uid_by_email ): array {
-		if ( ! $email_verified ) {
-			return array( 'action' => 'reject', 'user_id' => null );
-		}
+	public static function decide( ?int $uid_by_sub, ?int $uid_by_email ): array {
 		if ( null !== $uid_by_sub ) {
 			return array( 'action' => 'login', 'user_id' => $uid_by_sub );
 		}
@@ -93,7 +90,6 @@ class PixelHunter_Login_Accounts {
 	 */
 	public function resolve( array $provider, array $claims ): array {
 		$decision = self::decide(
-			true,
 			self::find_by_sub( $provider, (string) $claims['sub'] ),
 			self::find_by_email( (string) $claims['email'] )
 		);
