@@ -350,12 +350,21 @@ class PixelHunter_Login_Admin {
 		?>
 		<p><?php esc_html_e( 'No portal Azure (Microsoft Entra ID), segue por esta ordem:', 'pixelhunter-google-login' ); ?></p>
 		<ol>
-			<li><a href="<?php echo esc_url( 'https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'App registrations → New registration', 'pixelhunter-google-login' ); ?></a></li>
-			<li><?php esc_html_e( 'Supported account types → escolher “Personal Microsoft accounts only” (contas Hotmail/Outlook.com/Live)', 'pixelhunter-google-login' ); ?></li>
-			<li><?php esc_html_e( 'Redirect URI → plataforma “Web” → colar o Redirect URI (acima)', 'pixelhunter-google-login' ); ?></li>
-			<li><?php esc_html_e( 'Overview → copiar o “Application (client) ID” (é o Client ID)', 'pixelhunter-google-login' ); ?></li>
-			<li><?php esc_html_e( 'Certificates & secrets → New client secret → copiar o campo “Value” (é o Client Secret; só é mostrado uma vez)', 'pixelhunter-google-login' ); ?></li>
+			<li>
+				<a href="<?php echo esc_url( 'https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/CreateApplicationBlade' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Registar uma aplicação (abre já o formulário de registo)', 'pixelhunter-google-login' ); ?></a>
+				— <?php esc_html_e( 'em “Nome” escreve o nome da loja: é o que os clientes veem no ecrã de consentimento da Microsoft.', 'pixelhunter-google-login' ); ?>
+			</li>
+			<li><?php esc_html_e( 'Em “Tipos de contas suportadas” escolhe “Apenas contas pessoais” (a última opção do menu) — é o que cobre Hotmail, Outlook.com e Live.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'Em “URI de Redirecionamento” seleciona a plataforma “Web” e cola o Redirect URI (acima). Clica em “Registar”.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'Ficas na “Descrição Geral” da aplicação: copia o “ID de aplicação (cliente)” e cola-o no campo Client ID ao lado.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'No menu lateral da aplicação abre “Certificados e segredos” → “Novo segredo de cliente” → escolhe a validade (recomendado: 730 dias / 24 meses, senão o login deixa de funcionar quando expirar) → “Adicionar”.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'Copia a coluna “Valor” do segredo (atenção: NÃO é o “ID secreto”) — só é mostrada uma vez. É o Client Secret; o ideal é defini-lo em wp-config.php (constante abaixo do campo).', 'pixelhunter-google-login' ); ?></li>
 		</ol>
+		<p>
+			<?php esc_html_e( 'Para voltar mais tarde a uma aplicação já criada:', 'pixelhunter-google-login' ); ?>
+			<a href="<?php echo esc_url( 'https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'lista de registos de aplicações', 'pixelhunter-google-login' ); ?></a>
+			<?php esc_html_e( '(se a lista parecer vazia, muda para a tab “Todas as aplicações”).', 'pixelhunter-google-login' ); ?>
+		</p>
 		<?php
 	}
 }

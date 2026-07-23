@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PixelHunter Social Login
  * Description: Login e registo com Google e Microsoft (OAuth 2.0 / OpenID Connect), auto-contido, sem terceiros.
- * Version: 0.2.0
+ * Version: 0.2.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Text Domain: pixelhunter-google-login
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PIXELHUNTER_LOGIN_VERSION', '0.2.0' );
+define( 'PIXELHUNTER_LOGIN_VERSION', '0.2.1' );
 define( 'PIXELHUNTER_LOGIN_FILE', __FILE__ );
 define( 'PIXELHUNTER_LOGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PIXELHUNTER_LOGIN_URL', plugin_dir_url( __FILE__ ) );

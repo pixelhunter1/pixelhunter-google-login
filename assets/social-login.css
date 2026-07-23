@@ -1,9 +1,15 @@
+/* Lado a lado a preencher a largura toda; se um botão descer de 130px
+   (rótulos "Google"/"Microsoft"), faz wrap e cada um ocupa a linha inteira.
+   Flex (não grid): o divisor a toda a largura mantinha vivas colunas vazias
+   do auto-fit e os botões deixavam de esticar. */
 .pc-social-login {
 	display: flex;
-	flex-direction: column;
+	flex-wrap: wrap;
 	gap: var(--pc-space-2, 8px);
 	margin: 0 0 var(--pc-space-4, 16px);
 }
+
+.pc-social-btn { flex: 1 1 130px; }
 
 .pc-social-btn {
 	--pc-sbtn-bg: #fff;
@@ -33,6 +39,7 @@
 .pc-social-btn__icon svg { display: block; width: 18px; height: 18px; }
 
 .pc-social-login__divider {
+	flex: 1 1 100%;
 	display: flex;
 	align-items: center;
 	text-align: center;

@@ -30,16 +30,26 @@ para o design original (Google-only; a generalização multi-provider veio depoi
 
 ## Setup Microsoft (portal Azure / Entra ID)
 
-1. https://portal.azure.com → **App registrations → New registration**.
-2. **Supported account types**: escolhe **Personal Microsoft accounts only**
-   (é o que cobre Hotmail/Outlook.com/Live; o plugin usa o tenant `consumers`
-   e rejeita tokens de qualquer outro tenant).
-3. **Redirect URI**: plataforma **Web**, cola o valor da página de admin,
-   secção Microsoft:
+1. Abre diretamente o formulário **[Registar uma aplicação](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/CreateApplicationBlade)**.
+   Em **Nome** escreve o nome da loja — é o que os clientes veem no ecrã de
+   consentimento da Microsoft.
+2. **Tipos de contas suportadas**: escolhe **Apenas contas pessoais** (a última
+   opção do menu; cobre Hotmail/Outlook.com/Live — o plugin usa o tenant
+   `consumers` e rejeita tokens de qualquer outro tenant).
+3. **URI de Redirecionamento**: plataforma **Web**, cola o valor da tab
+   Microsoft na página de admin:
    `http://localhost:<porta>/wp-json/pixelhunter-google-login/v1/microsoft/callback`
-4. **Overview**: copia o **Application (client) ID** — é o Client ID.
-5. **Certificates & secrets → New client secret**: copia o campo **Value**
-   (só é mostrado uma vez) — é o Client Secret.
+   Clica em **Registar**.
+4. Na **Descrição Geral** da aplicação: copia o **ID de aplicação (cliente)** —
+   é o Client ID.
+5. No menu lateral, **Certificados e segredos → Novo segredo de cliente**:
+   escolhe a validade (recomendado 730 dias / 24 meses — quando expirar, o
+   login Microsoft deixa de funcionar até criares outro) → **Adicionar** →
+   copia a coluna **Valor** (não o "ID secreto"; só é mostrada uma vez) — é o
+   Client Secret.
+
+Para voltar a uma app já criada: [lista de registos de aplicações](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
+(se parecer vazia, muda para a tab "Todas as aplicações").
 
 ## Configurar o site
 

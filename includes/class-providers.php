@@ -27,6 +27,7 @@ class PixelHunter_Login_Providers {
 				'slug'                   => 'google',
 				'label'                  => 'Google',
 				'button_label'           => __( 'Continuar com Google', 'pixelhunter-google-login' ),
+				'button_label_short'     => 'Google',
 				'icon'                   => 'g-logo.svg',
 				'auth_url'               => 'https://accounts.google.com/o/oauth2/v2/auth',
 				'token_url'              => 'https://oauth2.googleapis.com/token',
@@ -51,6 +52,7 @@ class PixelHunter_Login_Providers {
 				'slug'                   => 'microsoft',
 				'label'                  => 'Microsoft',
 				'button_label'           => __( 'Continuar com Microsoft', 'pixelhunter-google-login' ),
+				'button_label_short'     => 'Microsoft',
 				'icon'                   => 'ms-logo.svg',
 				// Tenant "consumers" = contas Microsoft pessoais (Hotmail, Outlook.com, Live).
 				'auth_url'               => 'https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize',

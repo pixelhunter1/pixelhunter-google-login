@@ -48,9 +48,9 @@ class PixelHunter_Login_Button {
 				$url = PixelHunter_Login_Settings::start_url( $provider, $redirect_to );
 				$svg = @file_get_contents( PIXELHUNTER_LOGIN_DIR . 'assets/' . $provider['icon'] );
 				?>
-				<a class="pc-social-btn pc-social-btn--<?php echo esc_attr( $provider['slug'] ); ?> pc-social-btn--<?php echo esc_attr( $theme ); ?>" href="<?php echo esc_url( $url ); ?>">
+				<a class="pc-social-btn pc-social-btn--<?php echo esc_attr( $provider['slug'] ); ?> pc-social-btn--<?php echo esc_attr( $theme ); ?>" href="<?php echo esc_url( $url ); ?>" aria-label="<?php echo esc_attr( $provider['button_label'] ); ?>">
 					<span class="pc-social-btn__icon" aria-hidden="true"><?php echo $svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG estático local. ?></span>
-					<span class="pc-social-btn__label"><?php echo esc_html( $provider['button_label'] ); ?></span>
+					<span class="pc-social-btn__label"><?php echo esc_html( $provider['button_label_short'] ); ?></span>
 				</a>
 			<?php endforeach; ?>
 			<div class="pc-social-login__divider"><span><?php esc_html_e( 'ou', 'pixelhunter-google-login' ); ?></span></div>
