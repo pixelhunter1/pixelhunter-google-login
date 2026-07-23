@@ -117,6 +117,18 @@ php tests/test-providers.php
 
 Checklist de aceitação manual (por provider): email novo → cria conta · regresso → login instantâneo · email existente → confirm-link com password · mesmo email nos dois providers → mesma conta WP.
 
+## Traduções (i18n)
+
+Strings-fonte em **inglês**, traduções em `languages/` conforme a convenção WordPress. O português (pt_PT) vem incluído — `.po`, `.mo` e o formato performante `.l10n.php` (WP ≥ 6.5). Para atualizar ou acrescentar idiomas:
+
+```bash
+wp i18n make-pot . languages/pixelhunter-google-login.pot --exclude=vendor,tests,docs
+wp i18n update-po languages/pixelhunter-google-login.pot
+# traduzir os .po e depois:
+wp i18n make-mo languages
+wp i18n make-php languages
+```
+
 ## Licença
 
 GPL-2.0-or-later, como derivado de WordPress.

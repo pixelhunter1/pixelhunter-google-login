@@ -53,8 +53,8 @@ class PixelHunter_Login_Admin {
 	public function menu(): void {
 		add_submenu_page(
 			'woocommerce',
-			__( 'Login social', 'pixelhunter-google-login' ),
-			__( 'Login social', 'pixelhunter-google-login' ),
+			__( 'Social Login', 'pixelhunter-google-login' ),
+			__( 'Social Login', 'pixelhunter-google-login' ),
 			'manage_woocommerce',
 			self::SLUG,
 			array( $this, 'render' )
@@ -90,13 +90,13 @@ class PixelHunter_Login_Admin {
 
 			add_settings_section(
 				'credentials',
-				__( 'Credenciais', 'pixelhunter-google-login' ),
+				__( 'Credentials', 'pixelhunter-google-login' ),
 				'__return_null',
 				$page
 			);
 			add_settings_field(
 				'enabled',
-				__( 'Ativar', 'pixelhunter-google-login' ),
+				__( 'Enable', 'pixelhunter-google-login' ),
 				array( $this, 'field_enabled' ),
 				$page,
 				'credentials',
@@ -127,13 +127,13 @@ class PixelHunter_Login_Admin {
 		);
 		add_settings_section(
 			'appearance',
-			__( 'Botões', 'pixelhunter-google-login' ),
+			__( 'Buttons', 'pixelhunter-google-login' ),
 			'__return_null',
 			$this->page( 'appearance' )
 		);
 		add_settings_field(
 			'button_theme',
-			__( 'Tema dos botões', 'pixelhunter-google-login' ),
+			__( 'Button theme', 'pixelhunter-google-login' ),
 			array( $this, 'field_button_theme' ),
 			$this->page( 'appearance' ),
 			'appearance'
@@ -179,8 +179,8 @@ class PixelHunter_Login_Admin {
 		<label>
 			<input type="checkbox" name="<?php echo esc_attr( $provider['option'] ); ?>[enabled]" value="1" <?php checked( (bool) $s['enabled'] ); ?> />
 			<?php
-			/* translators: %s: rótulo do botão (ex.: Continuar com Google). */
-			printf( esc_html__( 'Mostrar o botão “%s”', 'pixelhunter-google-login' ), esc_html( $provider['button_label'] ) );
+			/* translators: %s: button label (e.g. Continue with Google). */
+			printf( esc_html__( 'Show the “%s” button', 'pixelhunter-google-login' ), esc_html( $provider['button_label'] ) );
 			?>
 		</label>
 		<?php
@@ -201,11 +201,11 @@ class PixelHunter_Login_Admin {
 		$provider = $args['provider'];
 		if ( PixelHunter_Login_Settings::secret_from_constant( $provider ) ) {
 			?>
-			<input type="text" class="regular-text" value="🔒 <?php esc_attr_e( 'Definido em wp-config.php', 'pixelhunter-google-login' ); ?>" disabled />
+			<input type="text" class="regular-text" value="🔒 <?php esc_attr_e( 'Set in wp-config.php', 'pixelhunter-google-login' ); ?>" disabled />
 			<p class="description">
 				<?php
-				/* translators: %s: nome da constante PHP. */
-				printf( esc_html__( 'A constante %s tem prioridade; este campo fica bloqueado.', 'pixelhunter-google-login' ), '<code>' . esc_html( $provider['secret_constant'] ) . '</code>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup construído acima, tudo escapado.
+				/* translators: %s: PHP constant name. */
+				printf( esc_html__( 'The %s constant takes precedence; this field is locked.', 'pixelhunter-google-login' ), '<code>' . esc_html( $provider['secret_constant'] ) . '</code>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup construído acima, tudo escapado.
 				?>
 			</p>
 			<?php
@@ -213,11 +213,11 @@ class PixelHunter_Login_Admin {
 		}
 		$db_secret_exists = '' !== (string) PixelHunter_Login_Settings::get( $provider )['client_secret'];
 		?>
-		<input type="password" id="phl_<?php echo esc_attr( $provider['slug'] ); ?>_client_secret" class="regular-text" name="<?php echo esc_attr( $provider['option'] ); ?>[client_secret]" value="" placeholder="<?php echo esc_attr( $db_secret_exists ? '•••••• (guardado — deixa em branco para manter)' : '' ); ?>" autocomplete="off" />
+		<input type="password" id="phl_<?php echo esc_attr( $provider['slug'] ); ?>_client_secret" class="regular-text" name="<?php echo esc_attr( $provider['option'] ); ?>[client_secret]" value="" placeholder="<?php echo esc_attr( $db_secret_exists ? __( '•••••• (saved — leave blank to keep)', 'pixelhunter-google-login' ) : '' ); ?>" autocomplete="off" />
 		<p class="description">
 			<?php
-			/* translators: %s: nome da constante PHP. */
-			printf( esc_html__( 'Recomendado: define %s em wp-config.php para não guardar o segredo na base de dados.', 'pixelhunter-google-login' ), '<code>' . esc_html( $provider['secret_constant'] ) . '</code>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup construído acima, tudo escapado.
+			/* translators: %s: PHP constant name. */
+			printf( esc_html__( 'Recommended: define %s in wp-config.php so the secret is never stored in the database.', 'pixelhunter-google-login' ), '<code>' . esc_html( $provider['secret_constant'] ) . '</code>' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup construído acima, tudo escapado.
 			?>
 		</p>
 		<?php
@@ -228,10 +228,10 @@ class PixelHunter_Login_Admin {
 		$option = PixelHunter_Login_Settings::APPEARANCE_OPTION;
 		?>
 		<select id="phl_theme" name="<?php echo esc_attr( $option ); ?>[button_theme]">
-			<option value="light" <?php selected( 'light', $theme ); ?>><?php esc_html_e( 'Claro', 'pixelhunter-google-login' ); ?></option>
-			<option value="dark" <?php selected( 'dark', $theme ); ?>><?php esc_html_e( 'Escuro', 'pixelhunter-google-login' ); ?></option>
+			<option value="light" <?php selected( 'light', $theme ); ?>><?php esc_html_e( 'Light', 'pixelhunter-google-login' ); ?></option>
+			<option value="dark" <?php selected( 'dark', $theme ); ?>><?php esc_html_e( 'Dark', 'pixelhunter-google-login' ); ?></option>
 		</select>
-		<p class="description"><?php esc_html_e( 'Aplica-se a todos os botões “Continuar com …”.', 'pixelhunter-google-login' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Applies to every “Continue with …” button.', 'pixelhunter-google-login' ); ?></p>
 		<?php
 	}
 
@@ -242,13 +242,13 @@ class PixelHunter_Login_Admin {
 		$current = $this->current_tab();
 		?>
 		<div class="wrap phl-wrap">
-			<h1><?php esc_html_e( 'Login social', 'pixelhunter-google-login' ); ?></h1>
+			<h1><?php esc_html_e( 'Social Login', 'pixelhunter-google-login' ); ?></h1>
 
-			<nav class="nav-tab-wrapper wp-clearfix" aria-label="<?php esc_attr_e( 'Tabs de configuração', 'pixelhunter-google-login' ); ?>">
+			<nav class="nav-tab-wrapper wp-clearfix" aria-label="<?php esc_attr_e( 'Settings tabs', 'pixelhunter-google-login' ); ?>">
 				<?php foreach ( $this->tab_slugs() as $tab ) : ?>
 					<?php
 					$provider = PixelHunter_Login_Providers::get( $tab );
-					$label    = $provider ? $provider['label'] : __( 'Aparência', 'pixelhunter-google-login' );
+					$label    = $provider ? $provider['label'] : __( 'Appearance', 'pixelhunter-google-login' );
 					$url      = add_query_arg( array( 'page' => self::SLUG, 'tab' => $tab ), admin_url( 'admin.php' ) );
 					?>
 					<a href="<?php echo esc_url( $url ); ?>" class="nav-tab <?php echo $tab === $current ? 'nav-tab-active' : ''; ?>"><?php echo esc_html( $label ); ?></a>
@@ -283,14 +283,14 @@ class PixelHunter_Login_Admin {
 			</div>
 
 			<div class="phl-card phl-card--aside">
-				<h2><?php esc_html_e( 'Estado', 'pixelhunter-google-login' ); ?></h2>
+				<h2><?php esc_html_e( 'Status', 'pixelhunter-google-login' ); ?></h2>
 				<?php $this->render_status( $provider ); ?>
 
 				<h2><?php esc_html_e( 'Redirect URI', 'pixelhunter-google-login' ); ?></h2>
-				<p class="description"><?php esc_html_e( 'Cola este valor na consola do provider (clica para selecionar):', 'pixelhunter-google-login' ); ?></p>
+				<p class="description"><?php esc_html_e( 'Paste this value in the provider console (click to select):', 'pixelhunter-google-login' ); ?></p>
 				<input type="text" class="phl-uri code" readonly onclick="this.select()" value="<?php echo esc_attr( PixelHunter_Login_Settings::redirect_uri( $provider ) ); ?>" />
 
-				<h2><?php esc_html_e( 'Guia de configuração', 'pixelhunter-google-login' ); ?></h2>
+				<h2><?php esc_html_e( 'Setup guide', 'pixelhunter-google-login' ); ?></h2>
 				<?php $this->render_guide( $provider['slug'] ); ?>
 			</div>
 		</div>
@@ -326,9 +326,9 @@ class PixelHunter_Login_Admin {
 			);
 		};
 		echo '<ul class="phl-status">';
-		$row( (bool) $s['enabled'], __( 'Ativo', 'pixelhunter-google-login' ) );
-		$row( '' !== (string) $s['client_id'], __( 'Client ID definido', 'pixelhunter-google-login' ) );
-		$row( $has_secret, $from_const ? __( 'Client Secret definido (via wp-config)', 'pixelhunter-google-login' ) : __( 'Client Secret definido', 'pixelhunter-google-login' ) );
+		$row( (bool) $s['enabled'], __( 'Enabled', 'pixelhunter-google-login' ) );
+		$row( '' !== (string) $s['client_id'], __( 'Client ID set', 'pixelhunter-google-login' ) );
+		$row( $has_secret, $from_const ? __( 'Client Secret set (via wp-config)', 'pixelhunter-google-login' ) : __( 'Client Secret set', 'pixelhunter-google-login' ) );
 		echo '</ul>';
 	}
 
@@ -336,34 +336,34 @@ class PixelHunter_Login_Admin {
 	protected function render_guide( string $slug ): void {
 		if ( 'google' === $slug ) {
 			?>
-			<p><?php esc_html_e( 'No Google Cloud Console, no menu “Google Auth Platform”, segue por esta ordem:', 'pixelhunter-google-login' ); ?></p>
+			<p><?php esc_html_e( 'In the Google Cloud Console, under the “Google Auth Platform” menu, follow these steps in order:', 'pixelhunter-google-login' ); ?></p>
 			<ol>
-				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/projectcreate' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Criar / escolher um projeto', 'pixelhunter-google-login' ); ?></a></li>
-				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/branding' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Branding — definir o nome e o logótipo da app (o que o utilizador vê no ecrã do Google)', 'pixelhunter-google-login' ); ?></a></li>
-				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/audience' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Público-alvo → Utilizadores de teste → adicionar o teu email (necessário para testar antes de publicar)', 'pixelhunter-google-login' ); ?></a></li>
-				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/clients' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Clientes → Criar cliente → tipo “Aplicação Web” → colar o Redirect URI (acima)', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/projectcreate' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Create / choose a project', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/branding' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Branding — set the app name and logo (what the user sees on the Google screen)', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/audience' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Audience → Test users → add your own email (required for testing before publishing)', 'pixelhunter-google-login' ); ?></a></li>
+				<li><a href="<?php echo esc_url( 'https://console.cloud.google.com/auth/clients' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Clients → Create client → type “Web application” → paste the Redirect URI (above)', 'pixelhunter-google-login' ); ?></a></li>
 			</ol>
-			<p><?php esc_html_e( 'Ao criar o cliente (passo 4), o Google mostra o Client ID e o Client Secret — cola-os no formulário ao lado.', 'pixelhunter-google-login' ); ?></p>
+			<p><?php esc_html_e( 'When the client is created (step 4), Google shows the Client ID and the Client Secret — paste them into the form on the left.', 'pixelhunter-google-login' ); ?></p>
 			<?php
 			return;
 		}
 		?>
-		<p><?php esc_html_e( 'No portal Azure (Microsoft Entra ID), segue por esta ordem:', 'pixelhunter-google-login' ); ?></p>
+		<p><?php esc_html_e( 'In the Azure portal (Microsoft Entra ID), follow these steps in order:', 'pixelhunter-google-login' ); ?></p>
 		<ol>
 			<li>
-				<a href="<?php echo esc_url( 'https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/CreateApplicationBlade' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Registar uma aplicação (abre já o formulário de registo)', 'pixelhunter-google-login' ); ?></a>
-				— <?php esc_html_e( 'em “Nome” escreve o nome da loja: é o que os clientes veem no ecrã de consentimento da Microsoft.', 'pixelhunter-google-login' ); ?>
+				<a href="<?php echo esc_url( 'https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/CreateApplicationBlade' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Register an application (opens the registration form directly)', 'pixelhunter-google-login' ); ?></a>
+				— <?php esc_html_e( 'under “Name”, enter your store name: it is what customers see on the Microsoft consent screen.', 'pixelhunter-google-login' ); ?>
 			</li>
-			<li><?php esc_html_e( 'Em “Tipos de contas suportadas” escolhe “Apenas contas pessoais” (a última opção do menu) — é o que cobre Hotmail, Outlook.com e Live.', 'pixelhunter-google-login' ); ?></li>
-			<li><?php esc_html_e( 'Em “URI de Redirecionamento” seleciona a plataforma “Web” e cola o Redirect URI (acima). Clica em “Registar”.', 'pixelhunter-google-login' ); ?></li>
-			<li><?php esc_html_e( 'Ficas na “Descrição Geral” da aplicação: copia o “ID de aplicação (cliente)” e cola-o no campo Client ID ao lado.', 'pixelhunter-google-login' ); ?></li>
-			<li><?php esc_html_e( 'No menu lateral da aplicação abre “Certificados e segredos” → “Novo segredo de cliente” → escolhe a validade (recomendado: 730 dias / 24 meses, senão o login deixa de funcionar quando expirar) → “Adicionar”.', 'pixelhunter-google-login' ); ?></li>
-			<li><?php esc_html_e( 'Copia a coluna “Valor” do segredo (atenção: NÃO é o “ID secreto”) — só é mostrada uma vez. É o Client Secret; o ideal é defini-lo em wp-config.php (constante abaixo do campo).', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'Under “Supported account types” choose “Personal Microsoft accounts only” (the last option in the list) — that is what covers Hotmail, Outlook.com and Live.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'Under “Redirect URI” select the “Web” platform and paste the Redirect URI (above). Click “Register”.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'You land on the app’s “Overview”: copy the “Application (client) ID” and paste it into the Client ID field on the left.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'In the app’s sidebar open “Certificates & secrets” → “New client secret” → choose the expiry (recommended: 730 days / 24 months, otherwise sign-in stops working when it expires) → “Add”.', 'pixelhunter-google-login' ); ?></li>
+			<li><?php esc_html_e( 'Copy the secret’s “Value” column (careful: NOT the “Secret ID”) — it is shown only once. That is the Client Secret; ideally define it in wp-config.php (constant shown below the field).', 'pixelhunter-google-login' ); ?></li>
 		</ol>
 		<p>
-			<?php esc_html_e( 'Para voltar mais tarde a uma aplicação já criada:', 'pixelhunter-google-login' ); ?>
-			<a href="<?php echo esc_url( 'https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'lista de registos de aplicações', 'pixelhunter-google-login' ); ?></a>
-			<?php esc_html_e( '(se a lista parecer vazia, muda para a tab “Todas as aplicações”).', 'pixelhunter-google-login' ); ?>
+			<?php esc_html_e( 'To come back later to an app you already created:', 'pixelhunter-google-login' ); ?>
+			<a href="<?php echo esc_url( 'https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade' ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'app registrations list', 'pixelhunter-google-login' ); ?></a>
+			<?php esc_html_e( '(if the list looks empty, switch to the “All applications” tab).', 'pixelhunter-google-login' ); ?>
 		</p>
 		<?php
 	}

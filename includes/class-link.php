@@ -85,8 +85,8 @@ class PixelHunter_Login_Link {
 			$label = self::provider_label( sanitize_text_field( wp_unslash( $_GET['phgl_link'] ) ) );
 			wc_add_notice(
 				sprintf(
-					/* translators: %s: nome do provider (Google/Microsoft). */
-					__( 'Já existe uma conta com este email. Inicia sessão com a tua password para ligar o %s (ou usa “Esqueceu-se da password?”).', 'pixelhunter-google-login' ),
+					/* translators: %s: provider name (Google/Microsoft). */
+					__( 'An account with this email already exists. Log in with your password to link %s (or use “Lost your password?”).', 'pixelhunter-google-login' ),
 					$label
 				),
 				'notice'
@@ -106,14 +106,14 @@ class PixelHunter_Login_Link {
 
 	protected static function error_message( string $code, string $label ): string {
 		if ( 'token_email_verified' === $code ) {
-			/* translators: %s: nome do provider (Google/Microsoft). */
-			return sprintf( __( 'A tua conta %s não tem o email verificado, por isso não é possível entrar por aqui.', 'pixelhunter-google-login' ), $label );
+			/* translators: %s: provider name (Google/Microsoft). */
+			return sprintf( __( 'Your %s account email is not verified, so it cannot be used to sign in here.', 'pixelhunter-google-login' ), $label );
 		}
 		if ( 'reject' === $code ) {
-			/* translators: %s: nome do provider (Google/Microsoft). */
-			return sprintf( __( 'Não foi possível iniciar sessão com o %s.', 'pixelhunter-google-login' ), $label );
+			/* translators: %s: provider name (Google/Microsoft). */
+			return sprintf( __( 'Could not sign in with %s.', 'pixelhunter-google-login' ), $label );
 		}
-		/* translators: %s: nome do provider (Google/Microsoft). */
-		return sprintf( __( 'O início de sessão com o %s falhou. Tenta novamente.', 'pixelhunter-google-login' ), $label );
+		/* translators: %s: provider name (Google/Microsoft). */
+		return sprintf( __( 'Signing in with %s failed. Please try again.', 'pixelhunter-google-login' ), $label );
 	}
 }

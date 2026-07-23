@@ -1,0 +1,184 @@
+# Portuguese (Portugal) translation for PixelHunter Social Login.
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: PixelHunter Social Login 0.3.0\n"
+"Last-Translator: PixelHunter <geralpixelhunter@gmail.com>\n"
+"Language-Team: Portuguese (Portugal)\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"PO-Revision-Date: 2026-07-23 11:30+0000\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: pixelhunter-google-login\n"
+
+#. Plugin Name of the plugin
+msgid "PixelHunter Social Login"
+msgstr "PixelHunter Social Login"
+
+#. Description of the plugin
+msgid "Google and Microsoft login/registration for WooCommerce (OAuth 2.0 / OpenID Connect) — self-contained, no third-party services."
+msgstr "Login e registo com Google e Microsoft para WooCommerce (OAuth 2.0 / OpenID Connect) — auto-contido, sem serviços de terceiros."
+
+msgid "Social Login"
+msgstr "Login social"
+
+msgid "Credentials"
+msgstr "Credenciais"
+
+msgid "Enable"
+msgstr "Ativar"
+
+msgid "Client ID"
+msgstr "Client ID"
+
+msgid "Client Secret"
+msgstr "Client Secret"
+
+msgid "Buttons"
+msgstr "Botões"
+
+msgid "Button theme"
+msgstr "Tema dos botões"
+
+#. translators: %s: button label (e.g. Continue with Google).
+#, php-format
+msgid "Show the “%s” button"
+msgstr "Mostrar o botão “%s”"
+
+msgid "Set in wp-config.php"
+msgstr "Definido em wp-config.php"
+
+#. translators: %s: PHP constant name.
+#, php-format
+msgid "The %s constant takes precedence; this field is locked."
+msgstr "A constante %s tem prioridade; este campo fica bloqueado."
+
+msgid "•••••• (saved — leave blank to keep)"
+msgstr "•••••• (guardado — deixa em branco para manter)"
+
+#. translators: %s: PHP constant name.
+#, php-format
+msgid "Recommended: define %s in wp-config.php so the secret is never stored in the database."
+msgstr "Recomendado: define %s em wp-config.php para o segredo nunca ficar guardado na base de dados."
+
+msgid "Light"
+msgstr "Claro"
+
+msgid "Dark"
+msgstr "Escuro"
+
+msgid "Applies to every “Continue with …” button."
+msgstr "Aplica-se a todos os botões “Continuar com …”."
+
+msgid "Settings tabs"
+msgstr "Tabs de configuração"
+
+msgid "Appearance"
+msgstr "Aparência"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Redirect URI"
+msgstr "Redirect URI"
+
+msgid "Paste this value in the provider console (click to select):"
+msgstr "Cola este valor na consola do provider (clica para selecionar):"
+
+msgid "Setup guide"
+msgstr "Guia de configuração"
+
+msgid "Enabled"
+msgstr "Ativo"
+
+msgid "Client ID set"
+msgstr "Client ID definido"
+
+msgid "Client Secret set (via wp-config)"
+msgstr "Client Secret definido (via wp-config)"
+
+msgid "Client Secret set"
+msgstr "Client Secret definido"
+
+msgid "In the Google Cloud Console, under the “Google Auth Platform” menu, follow these steps in order:"
+msgstr "No Google Cloud Console, no menu “Google Auth Platform”, segue por esta ordem:"
+
+msgid "Create / choose a project"
+msgstr "Criar / escolher um projeto"
+
+msgid "Branding — set the app name and logo (what the user sees on the Google screen)"
+msgstr "Branding — definir o nome e o logótipo da app (o que o utilizador vê no ecrã do Google)"
+
+msgid "Audience → Test users → add your own email (required for testing before publishing)"
+msgstr "Público-alvo → Utilizadores de teste → adicionar o teu email (necessário para testar antes de publicar)"
+
+msgid "Clients → Create client → type “Web application” → paste the Redirect URI (above)"
+msgstr "Clientes → Criar cliente → tipo “Aplicação Web” → colar o Redirect URI (acima)"
+
+msgid "When the client is created (step 4), Google shows the Client ID and the Client Secret — paste them into the form on the left."
+msgstr "Ao criar o cliente (passo 4), o Google mostra o Client ID e o Client Secret — cola-os no formulário ao lado."
+
+msgid "In the Azure portal (Microsoft Entra ID), follow these steps in order:"
+msgstr "No portal Azure (Microsoft Entra ID), segue por esta ordem:"
+
+msgid "Register an application (opens the registration form directly)"
+msgstr "Registar uma aplicação (abre já o formulário de registo)"
+
+msgid "under “Name”, enter your store name: it is what customers see on the Microsoft consent screen."
+msgstr "em “Nome” escreve o nome da loja: é o que os clientes veem no ecrã de consentimento da Microsoft."
+
+msgid "Under “Supported account types” choose “Personal Microsoft accounts only” (the last option in the list) — that is what covers Hotmail, Outlook.com and Live."
+msgstr "Em “Tipos de contas suportadas” escolhe “Apenas contas pessoais” (a última opção do menu) — é o que cobre Hotmail, Outlook.com e Live."
+
+msgid "Under “Redirect URI” select the “Web” platform and paste the Redirect URI (above). Click “Register”."
+msgstr "Em “URI de Redirecionamento” seleciona a plataforma “Web” e cola o Redirect URI (acima). Clica em “Registar”."
+
+msgid "You land on the app’s “Overview”: copy the “Application (client) ID” and paste it into the Client ID field on the left."
+msgstr "Ficas na “Descrição Geral” da aplicação: copia o “ID de aplicação (cliente)” e cola-o no campo Client ID ao lado."
+
+msgid "In the app’s sidebar open “Certificates & secrets” → “New client secret” → choose the expiry (recommended: 730 days / 24 months, otherwise sign-in stops working when it expires) → “Add”."
+msgstr "No menu lateral da aplicação abre “Certificados e segredos” → “Novo segredo de cliente” → escolhe a validade (recomendado: 730 dias / 24 meses, senão o login deixa de funcionar quando expirar) → “Adicionar”."
+
+msgid "Copy the secret’s “Value” column (careful: NOT the “Secret ID”) — it is shown only once. That is the Client Secret; ideally define it in wp-config.php (constant shown below the field)."
+msgstr "Copia a coluna “Valor” do segredo (atenção: NÃO é o “ID secreto”) — só é mostrada uma vez. É o Client Secret; o ideal é defini-lo em wp-config.php (constante indicada abaixo do campo)."
+
+msgid "To come back later to an app you already created:"
+msgstr "Para voltar mais tarde a uma aplicação já criada:"
+
+msgid "app registrations list"
+msgstr "lista de registos de aplicações"
+
+msgid "(if the list looks empty, switch to the “All applications” tab)."
+msgstr "(se a lista parecer vazia, muda para a tab “Todas as aplicações”)."
+
+msgid "or"
+msgstr "ou"
+
+#. translators: %s: provider name (Google/Microsoft).
+#, php-format
+msgid "An account with this email already exists. Log in with your password to link %s (or use “Lost your password?”)."
+msgstr "Já existe uma conta com este email. Inicia sessão com a tua password para ligar o %s (ou usa “Esqueceu-se da password?”)."
+
+#. translators: %s: provider name (Google/Microsoft).
+#, php-format
+msgid "Your %s account email is not verified, so it cannot be used to sign in here."
+msgstr "A tua conta %s não tem o email verificado, por isso não é possível entrar por aqui."
+
+#. translators: %s: provider name (Google/Microsoft).
+#, php-format
+msgid "Could not sign in with %s."
+msgstr "Não foi possível iniciar sessão com o %s."
+
+#. translators: %s: provider name (Google/Microsoft).
+#, php-format
+msgid "Signing in with %s failed. Please try again."
+msgstr "O início de sessão com o %s falhou. Tenta novamente."
+
+msgid "Continue with Google"
+msgstr "Continuar com Google"
+
+msgid "Continue with Microsoft"
+msgstr "Continuar com Microsoft"

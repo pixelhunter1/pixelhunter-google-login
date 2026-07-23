@@ -1,0 +1,237 @@
+# Copyright (C) 2026 
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: PixelHunter Social Login 0.3.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pixelhunter-google-login\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-23T11:21:02+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: pixelhunter-google-login\n"
+
+#. Plugin Name of the plugin
+#: pixelhunter-google-login.php
+msgid "PixelHunter Social Login"
+msgstr ""
+
+#. Description of the plugin
+#: pixelhunter-google-login.php
+msgid "Google and Microsoft login/registration for WooCommerce (OAuth 2.0 / OpenID Connect) — self-contained, no third-party services."
+msgstr ""
+
+#: includes/class-admin.php:56
+#: includes/class-admin.php:57
+#: includes/class-admin.php:245
+msgid "Social Login"
+msgstr ""
+
+#: includes/class-admin.php:93
+msgid "Credentials"
+msgstr ""
+
+#: includes/class-admin.php:99
+msgid "Enable"
+msgstr ""
+
+#: includes/class-admin.php:107
+msgid "Client ID"
+msgstr ""
+
+#: includes/class-admin.php:115
+msgid "Client Secret"
+msgstr ""
+
+#: includes/class-admin.php:130
+msgid "Buttons"
+msgstr ""
+
+#: includes/class-admin.php:136
+msgid "Button theme"
+msgstr ""
+
+#. translators: %s: button label (e.g. Continue with Google).
+#: includes/class-admin.php:183
+#, php-format
+msgid "Show the “%s” button"
+msgstr ""
+
+#: includes/class-admin.php:204
+msgid "Set in wp-config.php"
+msgstr ""
+
+#. translators: %s: PHP constant name.
+#: includes/class-admin.php:208
+#, php-format
+msgid "The %s constant takes precedence; this field is locked."
+msgstr ""
+
+#: includes/class-admin.php:216
+msgid "•••••• (saved — leave blank to keep)"
+msgstr ""
+
+#. translators: %s: PHP constant name.
+#: includes/class-admin.php:220
+#, php-format
+msgid "Recommended: define %s in wp-config.php so the secret is never stored in the database."
+msgstr ""
+
+#: includes/class-admin.php:231
+msgid "Light"
+msgstr ""
+
+#: includes/class-admin.php:232
+msgid "Dark"
+msgstr ""
+
+#: includes/class-admin.php:234
+msgid "Applies to every “Continue with …” button."
+msgstr ""
+
+#: includes/class-admin.php:247
+msgid "Settings tabs"
+msgstr ""
+
+#: includes/class-admin.php:251
+msgid "Appearance"
+msgstr ""
+
+#: includes/class-admin.php:286
+msgid "Status"
+msgstr ""
+
+#: includes/class-admin.php:289
+msgid "Redirect URI"
+msgstr ""
+
+#: includes/class-admin.php:290
+msgid "Paste this value in the provider console (click to select):"
+msgstr ""
+
+#: includes/class-admin.php:293
+msgid "Setup guide"
+msgstr ""
+
+#: includes/class-admin.php:329
+msgid "Enabled"
+msgstr ""
+
+#: includes/class-admin.php:330
+msgid "Client ID set"
+msgstr ""
+
+#: includes/class-admin.php:331
+msgid "Client Secret set (via wp-config)"
+msgstr ""
+
+#: includes/class-admin.php:331
+msgid "Client Secret set"
+msgstr ""
+
+#: includes/class-admin.php:339
+msgid "In the Google Cloud Console, under the “Google Auth Platform” menu, follow these steps in order:"
+msgstr ""
+
+#: includes/class-admin.php:341
+msgid "Create / choose a project"
+msgstr ""
+
+#: includes/class-admin.php:342
+msgid "Branding — set the app name and logo (what the user sees on the Google screen)"
+msgstr ""
+
+#: includes/class-admin.php:343
+msgid "Audience → Test users → add your own email (required for testing before publishing)"
+msgstr ""
+
+#: includes/class-admin.php:344
+msgid "Clients → Create client → type “Web application” → paste the Redirect URI (above)"
+msgstr ""
+
+#: includes/class-admin.php:346
+msgid "When the client is created (step 4), Google shows the Client ID and the Client Secret — paste them into the form on the left."
+msgstr ""
+
+#: includes/class-admin.php:351
+msgid "In the Azure portal (Microsoft Entra ID), follow these steps in order:"
+msgstr ""
+
+#: includes/class-admin.php:354
+msgid "Register an application (opens the registration form directly)"
+msgstr ""
+
+#: includes/class-admin.php:355
+msgid "under “Name”, enter your store name: it is what customers see on the Microsoft consent screen."
+msgstr ""
+
+#: includes/class-admin.php:357
+msgid "Under “Supported account types” choose “Personal Microsoft accounts only” (the last option in the list) — that is what covers Hotmail, Outlook.com and Live."
+msgstr ""
+
+#: includes/class-admin.php:358
+msgid "Under “Redirect URI” select the “Web” platform and paste the Redirect URI (above). Click “Register”."
+msgstr ""
+
+#: includes/class-admin.php:359
+msgid "You land on the app’s “Overview”: copy the “Application (client) ID” and paste it into the Client ID field on the left."
+msgstr ""
+
+#: includes/class-admin.php:360
+msgid "In the app’s sidebar open “Certificates & secrets” → “New client secret” → choose the expiry (recommended: 730 days / 24 months, otherwise sign-in stops working when it expires) → “Add”."
+msgstr ""
+
+#: includes/class-admin.php:361
+msgid "Copy the secret’s “Value” column (careful: NOT the “Secret ID”) — it is shown only once. That is the Client Secret; ideally define it in wp-config.php (constant shown below the field)."
+msgstr ""
+
+#: includes/class-admin.php:364
+msgid "To come back later to an app you already created:"
+msgstr ""
+
+#: includes/class-admin.php:365
+msgid "app registrations list"
+msgstr ""
+
+#: includes/class-admin.php:366
+msgid "(if the list looks empty, switch to the “All applications” tab)."
+msgstr ""
+
+#: includes/class-button.php:56
+msgid "or"
+msgstr ""
+
+#. translators: %s: provider name (Google/Microsoft).
+#: includes/class-link.php:89
+#, php-format
+msgid "An account with this email already exists. Log in with your password to link %s (or use “Lost your password?”)."
+msgstr ""
+
+#. translators: %s: provider name (Google/Microsoft).
+#: includes/class-link.php:110
+#, php-format
+msgid "Your %s account email is not verified, so it cannot be used to sign in here."
+msgstr ""
+
+#. translators: %s: provider name (Google/Microsoft).
+#: includes/class-link.php:114
+#, php-format
+msgid "Could not sign in with %s."
+msgstr ""
+
+#. translators: %s: provider name (Google/Microsoft).
+#: includes/class-link.php:117
+#, php-format
+msgid "Signing in with %s failed. Please try again."
+msgstr ""
+
+#: includes/class-providers.php:29
+msgid "Continue with Google"
+msgstr ""
+
+#: includes/class-providers.php:54
+msgid "Continue with Microsoft"
+msgstr ""

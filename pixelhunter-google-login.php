@@ -1,11 +1,12 @@
 <?php
 /**
  * Plugin Name: PixelHunter Social Login
- * Description: Login e registo com Google e Microsoft (OAuth 2.0 / OpenID Connect), auto-contido, sem terceiros.
- * Version: 0.2.1
+ * Description: Google and Microsoft login/registration for WooCommerce (OAuth 2.0 / OpenID Connect) — self-contained, no third-party services.
+ * Version: 0.3.0
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Text Domain: pixelhunter-google-login
+ * Domain Path: /languages
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Update URI: false
@@ -21,7 +22,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PIXELHUNTER_LOGIN_VERSION', '0.2.1' );
+define( 'PIXELHUNTER_LOGIN_VERSION', '0.3.0' );
 define( 'PIXELHUNTER_LOGIN_FILE', __FILE__ );
 define( 'PIXELHUNTER_LOGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PIXELHUNTER_LOGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -32,6 +33,19 @@ require_once PIXELHUNTER_LOGIN_DIR . 'includes/class-settings.php';
 if ( is_readable( PIXELHUNTER_LOGIN_DIR . 'vendor/autoload.php' ) ) {
 	require_once PIXELHUNTER_LOGIN_DIR . 'vendor/autoload.php';
 }
+
+// Fonte em inglês; traduções em languages/ (plugin fora do wordpress.org, o
+// carregamento automático do WP não se aplica). Em init por causa do WP 6.7+.
+add_action(
+	'init',
+	function () {
+		load_plugin_textdomain(
+			'pixelhunter-google-login',
+			false,
+			dirname( plugin_basename( __FILE__ ) ) . '/languages'
+		);
+	}
+);
 
 /**
  * Bootstrap. Later tasks add require_once + init lines below this marker.
