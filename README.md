@@ -8,6 +8,20 @@
 
 Login e registo com **Google** e **Microsoft** (contas pessoais: Hotmail, Outlook.com, Live) para lojas WooCommerce, via **OAuth 2.0 / OpenID Connect** — auto-contido, sem plugins de terceiros nem serviços intermediários. As credenciais dos clientes nunca passam pela loja: a autenticação acontece no Google/Microsoft e o plugin apenas valida criptograficamente o resultado.
 
+## Aspeto
+
+Botões **Continuar com Google / Microsoft** nos formulários de login e registo do WooCommerce (temas claro/escuro, responsivos):
+
+<p align="center">
+  <img src="assets/screenshot-1.png" alt="Botões Google e Microsoft no formulário de login do WooCommerce" width="440">
+</p>
+
+Admin em **WooCommerce → Login social** — guia passo-a-passo, Redirect URI pronto a copiar e estado ao vivo, por provider:
+
+| Google | Microsoft |
+|:---:|:---:|
+| ![Admin — tab Google](assets/screenshot-2.png) | ![Admin — tab Microsoft](assets/screenshot-3.png) |
+
 ## Funcionalidades
 
 - **Dois providers, uma arquitetura** — todos os factos específicos de cada provider (endpoints, política de claims, branding) vivem num único registry (`includes/class-providers.php`); o resto do código é agnóstico. Acrescentar um terceiro provider é acrescentar uma entrada ao registry.
