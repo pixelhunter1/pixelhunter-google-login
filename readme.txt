@@ -7,7 +7,7 @@ Tags: woocommerce, login, google, microsoft, oauth
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 0.3.2
+Stable tag: 0.3.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,16 +69,14 @@ Google emits the `email_verified` claim and the plugin requires `true`. Microsof
 
 == Screenshots ==
 
-<img src="https://raw.githubusercontent.com/pixelhunter1/pixelhunter-google-login/master/assets/screenshot-1.png" alt="Google and Microsoft buttons on the WooCommerce login form" style="max-width:100%;height:auto" />
 1. Google and Microsoft buttons on the WooCommerce login/register form (light and dark themes, responsive).
-
-<img src="https://raw.githubusercontent.com/pixelhunter1/pixelhunter-google-login/master/assets/screenshot-2.png" alt="Admin settings — Google tab with setup guide and live status" style="max-width:100%;height:auto" />
 2. Admin settings under WooCommerce → Social Login — Google tab with step-by-step guide, ready-to-copy Redirect URI, and live status.
-
-<img src="https://raw.githubusercontent.com/pixelhunter1/pixelhunter-google-login/master/assets/screenshot-3.png" alt="Admin settings — Microsoft tab" style="max-width:100%;height:auto" />
 3. Admin settings — Microsoft tab (Azure setup guide and secret-expiry note).
 
 == Changelog ==
+
+= 0.3.3 =
+* Screenshots now render as images in the "View Details" modal. WordPress's readme parser strips `<img>` from the screenshots section, so the images are injected after parsing (from the repo assets) instead.
 
 = 0.3.2 =
 * Plugin metadata: author and plugin URI in the header, and a WordPress.org-format `readme.txt` that populates the "View Details" modal (Description, Installation, FAQ, Changelog).
@@ -105,6 +103,9 @@ Google emits the `email_verified` claim and the plugin requires `true`. Microsof
 * Initial release: OAuth `/start` and `/callback` endpoints, single-use `state`/`nonce` CSRF protection, full `id_token` claim validation against the provider JWKS, secure account lookup/create/link, the Google button via WooCommerce hooks, and the admin settings page with setup guide and live status.
 
 == Upgrade Notice ==
+
+= 0.3.3 =
+Screenshots now show as images in the plugin's "View Details" screen. No functional changes.
 
 = 0.3.2 =
 Adds full plugin details (description, changelog, screenshots) to the WordPress "View Details" screen. No functional changes.

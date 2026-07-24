@@ -3,7 +3,7 @@
  * Plugin Name: PixelHunter Social Login
  * Plugin URI: https://github.com/pixelhunter1/pixelhunter-google-login
  * Description: Google and Microsoft login/registration for WooCommerce (OAuth 2.0 / OpenID Connect) — self-contained, no third-party services.
- * Version: 0.3.2
+ * Version: 0.3.3
  * Author: Miguel Carneiro
  * Author URI: https://pixelhunter.pt
  * Requires at least: 6.0
@@ -26,7 +26,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PIXELHUNTER_LOGIN_VERSION', '0.3.2' );
+define( 'PIXELHUNTER_LOGIN_VERSION', '0.3.3' );
 define( 'PIXELHUNTER_LOGIN_FILE', __FILE__ );
 define( 'PIXELHUNTER_LOGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PIXELHUNTER_LOGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -49,6 +49,32 @@ if ( class_exists( \YahnisElsts\PluginUpdateChecker\v5\PucFactory::class ) ) {
 		'pixelhunter-google-login'
 	);
 	$phgl_update_checker->setBranch( 'master' );
+
+	// O parser de readme do PUC remove as tags <img>, por isso as screenshots
+	// não sobrevivem no readme.txt (só as legendas). Injetamo-las aqui, depois
+	// do parse, a apontar para os PNGs no repo (raw GitHub). O wp_kses do modal
+	// "Ver detalhes" deixa passar <img src|alt>, logo renderizam.
+	$phgl_update_checker->addResultFilter(
+		function ( $info ) {
+			if ( ! is_object( $info ) ) {
+				return $info;
+			}
+			$base  = 'https://raw.githubusercontent.com/pixelhunter1/pixelhunter-google-login/master/assets/';
+			$shots = array(
+				'screenshot-1.png' => __( 'Google and Microsoft buttons on the WooCommerce login/register form.', 'pixelhunter-google-login' ),
+				'screenshot-2.png' => __( 'Admin — Google tab: setup guide, ready-to-copy Redirect URI, and live status.', 'pixelhunter-google-login' ),
+				'screenshot-3.png' => __( 'Admin — Microsoft tab (Azure setup guide and secret-expiry note).', 'pixelhunter-google-login' ),
+			);
+			$html = '';
+			foreach ( $shots as $file => $caption ) {
+				$html .= '<p><img src="' . esc_url( $base . $file ) . '" alt="' . esc_attr( $caption ) . '" />'
+					. '<br />' . esc_html( $caption ) . '</p>';
+			}
+			$info->sections                 = is_array( $info->sections ) ? $info->sections : array();
+			$info->sections['screenshots']  = $html;
+			return $info;
+		}
+	);
 }
 
 // Fonte em inglês; traduções em languages/ (plugin fora do wordpress.org, o
