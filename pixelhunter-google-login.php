@@ -65,11 +65,14 @@ if ( class_exists( \YahnisElsts\PluginUpdateChecker\v5\PucFactory::class ) ) {
 				'screenshot-2.png' => __( 'Admin — Google tab: setup guide, ready-to-copy Redirect URI, and live status.', 'pixelhunter-google-login' ),
 				'screenshot-3.png' => __( 'Admin — Microsoft tab (Azure setup guide and secret-expiry note).', 'pixelhunter-google-login' ),
 			);
-			$html = '';
+			// Markup <ol><li><img><p> = convenção do wordpress.org: o CSS do core
+			// (#section-screenshots li img { max-width:100% }) trata do tamanho.
+			$html = '<ol>';
 			foreach ( $shots as $file => $caption ) {
-				$html .= '<p><img src="' . esc_url( $base . $file ) . '" alt="' . esc_attr( $caption ) . '" />'
-					. '<br />' . esc_html( $caption ) . '</p>';
+				$html .= '<li><img src="' . esc_url( $base . $file ) . '" alt="' . esc_attr( $caption ) . '" />'
+					. '<p>' . esc_html( $caption ) . '</p></li>';
 			}
+			$html .= '</ol>';
 			$info->sections                 = is_array( $info->sections ) ? $info->sections : array();
 			$info->sections['screenshots']  = $html;
 			return $info;
