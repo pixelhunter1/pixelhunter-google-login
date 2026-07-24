@@ -2,5 +2,6 @@
 # tira pastas de desenvolvimento para os utilizadores instalarem só o essencial.
 /tests      export-ignore
 /docs       export-ignore
+assets/screenshot-*.png export-ignore
 /.gitignore export-ignore
 /.gitattributes export-ignore
