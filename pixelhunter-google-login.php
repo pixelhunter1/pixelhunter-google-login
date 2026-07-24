@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PixelHunter Social Login
  * Description: Google and Microsoft login/registration for WooCommerce (OAuth 2.0 / OpenID Connect) — self-contained, no third-party services.
- * Version: 0.3.0
+ * Version: 0.3.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Text Domain: pixelhunter-google-login
@@ -22,7 +22,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PIXELHUNTER_LOGIN_VERSION', '0.3.0' );
+define( 'PIXELHUNTER_LOGIN_VERSION', '0.3.1' );
 define( 'PIXELHUNTER_LOGIN_FILE', __FILE__ );
 define( 'PIXELHUNTER_LOGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PIXELHUNTER_LOGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -32,6 +32,19 @@ require_once PIXELHUNTER_LOGIN_DIR . 'includes/class-settings.php';
 
 if ( is_readable( PIXELHUNTER_LOGIN_DIR . 'vendor/autoload.php' ) ) {
 	require_once PIXELHUNTER_LOGIN_DIR . 'vendor/autoload.php';
+}
+
+// Atualizações a partir dos GitHub Releases (repo público, sem token).
+// Compara a tag do release com o header Version: e injeta o update no
+// ecrã normal "Plugins → Atualizações". Update URI: false continua a
+// bloquear o wordpress.org — o PUC injeta pelo transient, não colide.
+if ( class_exists( \YahnisElsts\PluginUpdateChecker\v5\PucFactory::class ) ) {
+	$phgl_update_checker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+		'https://github.com/pixelhunter1/pixelhunter-google-login/',
+		__FILE__,
+		'pixelhunter-google-login'
+	);
+	$phgl_update_checker->setBranch( 'master' );
 }
 
 // Fonte em inglês; traduções em languages/ (plugin fora do wordpress.org, o

@@ -1,0 +1,6 @@
+# O zipball que o GitHub gera para cada release respeita export-ignore:
+# tira pastas de desenvolvimento para os utilizadores instalarem só o essencial.
+/tests      export-ignore
+/docs       export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
