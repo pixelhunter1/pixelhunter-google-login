@@ -4,6 +4,7 @@
 ![WooCommerce](https://img.shields.io/badge/WooCommerce-ready-96588a?logo=woocommerce&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-%E2%89%A5%208.0-777bb3?logo=php&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-36%20asserts-brightgreen)
+[![Última versão](https://img.shields.io/github/v/release/pixelhunter1/pixelhunter-google-login?label=vers%C3%A3o&color=blue)](https://github.com/pixelhunter1/pixelhunter-google-login/releases/latest)
 
 Login e registo com **Google** e **Microsoft** (contas pessoais: Hotmail, Outlook.com, Live) para lojas WooCommerce, via **OAuth 2.0 / OpenID Connect** — auto-contido, sem plugins de terceiros nem serviços intermediários. As credenciais dos clientes nunca passam pela loja: a autenticação acontece no Google/Microsoft e o plugin apenas valida criptograficamente o resultado.
 
@@ -51,7 +52,9 @@ Botão "Continuar com …"
 
 ## Instalação
 
-1. Copia a pasta do plugin para `wp-content/plugins/` (o `vendor/` já vem incluído).
+**Descarregar:** [**pixelhunter-google-login.zip** — última versão](https://github.com/pixelhunter1/pixelhunter-google-login/releases/latest/download/pixelhunter-google-login.zip) · [todas as versões](https://github.com/pixelhunter1/pixelhunter-google-login/releases)
+
+1. No wp-admin: **Plugins → Adicionar novo → Carregar plugin** → escolhe o `.zip` → **Instalar agora**. (Em alternativa, descompacta a pasta para `wp-content/plugins/`.) O `vendor/` já vem incluído — não é preciso `composer install`.
 2. Ativa o plugin em Plugins.
 3. Configura em **WooCommerce → Login social** — cada tab tem o guia passo-a-passo da respetiva consola e o Redirect URI pronto a copiar.
 
@@ -80,6 +83,12 @@ define( 'PIXELHUNTER_MICROSOFT_LOGIN_CLIENT_SECRET', '…' );
 ```
 
 Quando a constante existe, o valor nunca é escrito na base de dados e o campo correspondente do admin fica bloqueado.
+
+## Atualizações
+
+Depois de instalado, o plugin **atualiza-se sozinho** a partir dos [GitHub Releases](https://github.com/pixelhunter1/pixelhunter-google-login/releases) — tal como um plugin do WordPress.org. Quando sai uma versão nova, ela aparece em **Plugins → Atualizações** no wp-admin e instala-se com um clique, através da biblioteca [`plugin-update-checker`](https://github.com/YahnisElsts/plugin-update-checker) (incluída). Não há serviços de terceiros: o site consulta o GitHub por HTTPS, com validação de certificado.
+
+> A primeira instalação é sempre manual (o `.zip` acima). Um site só recebe atualizações automáticas se já estiver a correr uma versão **com** este mecanismo (≥ 0.3.1).
 
 ## Estrutura do código
 
