@@ -3,7 +3,7 @@
  * Verificação do id_token. `validate_claims()` é pura (sem WordPress);
  * `decode()` acrescenta a verificação de assinatura contra o JWKS do provider.
  *
- * @package PixelHunter_Google_Login
+ * @package PixelHunter_Social_Login
  */
 
 defined( 'ABSPATH' ) || exit;

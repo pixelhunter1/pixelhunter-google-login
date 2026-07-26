@@ -3,7 +3,7 @@
  * Resolução de contas. `decide()` é pura; as pesquisas/criação em WordPress
  * usam as meta keys do provider (uma identidade ligada por provider).
  *
- * @package PixelHunter_Google_Login
+ * @package PixelHunter_Social_Login
  */
 
 defined( 'ABSPATH' ) || exit;

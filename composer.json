@@ -1,6 +1,5 @@
 {
     "require": {
-        "firebase/php-jwt": "^7.0",
-        "yahnis-elsts/plugin-update-checker": "^5.7"
+        "firebase/php-jwt": "^7.0"
     }
 }

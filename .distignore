@@ -1,0 +1,15 @@
+# Ficheiros que NÃO vão para o SVN do wordpress.org.
+# Usado pelo action-wordpress-plugin-deploy (o .gitattributes só cobre os
+# zipballs do GitHub; o deploy para SVN lê este ficheiro).
+/.git
+/.github
+/.gitignore
+/.gitattributes
+/.distignore
+/docs
+/tests
+/phpcs.xml.dist
+/composer.lock
+/assets/screenshot-1.png
+/assets/screenshot-2.png
+/assets/screenshot-3.png

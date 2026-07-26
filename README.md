@@ -39,7 +39,7 @@ Admin em **WooCommerce → Login social** — guia passo-a-passo, Redirect URI p
 
 ```
 Botão "Continuar com …"
-  → GET /wp-json/pixelhunter-google-login/v1/{provider}/start
+  → GET /wp-json/pixelhunter-social-login/v1/{provider}/start
       gera state+nonce (transient de uso único + cookie HttpOnly)
       → redirect para o ecrã de autorização do provider
   → o cliente autentica-se NO provider (a loja nunca vê a password)
@@ -66,9 +66,7 @@ Botão "Continuar com …"
 
 ## Instalação
 
-**Descarregar:** [**pixelhunter-google-login.zip** — última versão](https://github.com/pixelhunter1/pixelhunter-google-login/releases/latest/download/pixelhunter-google-login.zip) · [todas as versões](https://github.com/pixelhunter1/pixelhunter-google-login/releases)
-
-1. No wp-admin: **Plugins → Adicionar novo → Carregar plugin** → escolhe o `.zip` → **Instalar agora**. (Em alternativa, descompacta a pasta para `wp-content/plugins/`.) O `vendor/` já vem incluído — não é preciso `composer install`.
+1. No wp-admin: **Plugins → Adicionar novo**, procura por "PixelHunter Social Login" → **Instalar agora**. O `vendor/` já vem incluído — não é preciso `composer install`.
 2. Ativa o plugin em Plugins.
 3. Configura em **WooCommerce → Login social** — cada tab tem o guia passo-a-passo da respetiva consola e o Redirect URI pronto a copiar.
 
@@ -100,9 +98,9 @@ Quando a constante existe, o valor nunca é escrito na base de dados e o campo c
 
 ## Atualizações
 
-Depois de instalado, o plugin **atualiza-se sozinho** a partir dos [GitHub Releases](https://github.com/pixelhunter1/pixelhunter-google-login/releases) — tal como um plugin do WordPress.org. Quando sai uma versão nova, ela aparece em **Plugins → Atualizações** no wp-admin e instala-se com um clique, através da biblioteca [`plugin-update-checker`](https://github.com/YahnisElsts/plugin-update-checker) (incluída). Não há serviços de terceiros: o site consulta o GitHub por HTTPS, com validação de certificado.
+As atualizações vêm do **WordPress.org**, pelo canal normal: aparecem em **Plugins → Atualizações** no wp-admin e instalam-se com um clique. O plugin não traz update checker próprio nem header `Update URI` — ambos são motivo de rejeição no diretório (ver `.distignore` e o workflow de deploy para SVN).
 
-> A primeira instalação é sempre manual (o `.zip` acima). Um site só recebe atualizações automáticas se já estiver a correr uma versão **com** este mecanismo (≥ 0.3.1).
+> Até à versão 0.3.3 as atualizações vinham dos GitHub Releases via `plugin-update-checker`. Esse mecanismo foi removido na 0.4.0.
 
 ## Estrutura do código
 
@@ -117,16 +115,16 @@ Depois de instalado, o plugin **atualiza-se sozinho** a partir dos [GitHub Relea
 | `includes/class-admin.php` | Página de settings (tabs, Settings API, guias) |
 | `includes/class-settings.php` | Acesso à config por provider; constantes > BD |
 
-> **Nota histórica:** o slug/pasta mantém o nome original `pixelhunter-google-login` (o plugin nasceu Google-only); mudá-lo desativava o plugin nas instalações existentes. Pela mesma razão, os identificadores legados do Google (opção, constante, meta keys, rota `/callback`) são imutáveis — ver comentários no registry.
+> **Nomes:** a pasta, o ficheiro principal e o text domain são `pixelhunter-social-login` — o wordpress.org exige que sejam iguais ao slug. Já os identificadores **internos** mantêm o nome legado do Google (prefixo `phgl_`, opção `pixelhunter_google_login_settings`, constantes, meta keys, rota `/callback` sem provider): são invisíveis para o diretório e mudá-los perdia a configuração e as contas já ligadas nas instalações existentes.
 
 ## Rotas REST
 
 | Rota | Função |
 |---|---|
-| `GET /wp-json/pixelhunter-google-login/v1/start` | Início do fluxo Google (legado) |
-| `GET /wp-json/pixelhunter-google-login/v1/callback` | Callback Google (é este o Redirect URI) |
-| `GET /wp-json/pixelhunter-google-login/v1/microsoft/start` | Início do fluxo Microsoft |
-| `GET /wp-json/pixelhunter-google-login/v1/microsoft/callback` | Callback Microsoft (Redirect URI) |
+| `GET /wp-json/pixelhunter-social-login/v1/start` | Início do fluxo Google (legado) |
+| `GET /wp-json/pixelhunter-social-login/v1/callback` | Callback Google (é este o Redirect URI) |
+| `GET /wp-json/pixelhunter-social-login/v1/microsoft/start` | Início do fluxo Microsoft |
+| `GET /wp-json/pixelhunter-social-login/v1/microsoft/callback` | Callback Microsoft (Redirect URI) |
 
 ## Testes
 
@@ -145,8 +143,8 @@ Checklist de aceitação manual (por provider): email novo → cria conta · reg
 Strings-fonte em **inglês**, traduções em `languages/` conforme a convenção WordPress. O português (pt_PT) vem incluído — `.po`, `.mo` e o formato performante `.l10n.php` (WP ≥ 6.5). Para atualizar ou acrescentar idiomas:
 
 ```bash
-wp i18n make-pot . languages/pixelhunter-google-login.pot --exclude=vendor,tests,docs
-wp i18n update-po languages/pixelhunter-google-login.pot
+wp i18n make-pot . languages/pixelhunter-social-login.pot --exclude=vendor,tests,docs
+wp i18n update-po languages/pixelhunter-social-login.pot
 # traduzir os .po e depois:
 wp i18n make-mo languages
 wp i18n make-php languages

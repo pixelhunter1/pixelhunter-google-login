@@ -4,7 +4,7 @@
  * formulários de login e registo (hooks WooCommerce) e enfileira a stylesheet.
  * Auto-contido: o tema não é tocado.
  *
- * @package PixelHunter_Google_Login
+ * @package PixelHunter_Social_Login
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -53,7 +53,7 @@ class PixelHunter_Login_Button {
 					<span class="pc-social-btn__label"><?php echo esc_html( $provider['button_label_short'] ); ?></span>
 				</a>
 			<?php endforeach; ?>
-			<div class="pc-social-login__divider"><span><?php esc_html_e( 'or', 'pixelhunter-google-login' ); ?></span></div>
+			<div class="pc-social-login__divider"><span><?php esc_html_e( 'or', 'pixelhunter-social-login' ); ?></span></div>
 		</div>
 		<?php
 	}

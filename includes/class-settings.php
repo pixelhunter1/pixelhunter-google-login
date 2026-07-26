@@ -3,15 +3,17 @@
  * Config accessor por provider. O Client Secret prefere SEMPRE a constante do
  * wp-config quando definida.
  *
- * @package PixelHunter_Google_Login
+ * @package PixelHunter_Social_Login
  */
 
 defined( 'ABSPATH' ) || exit;
 
 class PixelHunter_Login_Settings {
 
-	// Legado: o Redirect URI do Google registado na consola usa este namespace.
-	const REST_NAMESPACE = 'pixelhunter-google-login/v1';
+	// Compõe o Redirect URI que o utilizador cola na consola do provider.
+	// Mudar isto invalida os Redirect URIs já registados — não mexer depois
+	// de publicado: cada instalação teria de reconfigurar a consola.
+	const REST_NAMESPACE = 'pixelhunter-social-login/v1';
 
 	const APPEARANCE_OPTION = 'pixelhunter_login_appearance';
 

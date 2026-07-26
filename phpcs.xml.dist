@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ruleset name="PixelHunter Social Login">
+
+	<file>.</file>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/tests/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg value="ps"/>
+
+	<rule ref="WordPress">
+		<!-- Declarados no sniff abaixo. -->
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="phgl"/>
+				<element value="pixelhunter"/>
+				<element value="PixelHunter"/>
+				<element value="PIXELHUNTER"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="phgl"/>
+				<element value="pixelhunter"/>
+				<element value="PixelHunter"/>
+				<element value="PIXELHUNTER"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="pixelhunter-social-login"/>
+			</property>
+		</properties>
+	</rule>
+
+	<config name="minimum_wp_version" value="6.0"/>
+	<config name="testVersion" value="8.0-"/>
+
+</ruleset>

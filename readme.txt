@@ -1,13 +1,10 @@
 === PixelHunter Social Login ===
 Contributors: pixelhunter
-Author: Miguel Carneiro
-Author URI: https://pixelhunter.pt
-Plugin URI: https://github.com/pixelhunter1/pixelhunter-google-login
 Tags: woocommerce, login, google, microsoft, oauth
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 0.3.3
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -41,7 +38,7 @@ The customer authenticates **at the provider** (the store never sees the passwor
 
 == Installation ==
 
-1. In wp-admin: **Plugins → Add New → Upload Plugin** → choose the `.zip` → **Install Now**. (Alternatively, unzip the folder into `wp-content/plugins/`.) The `vendor/` directory is bundled — no `composer install` needed.
+1. In wp-admin: **Plugins → Add New**, search for "PixelHunter Social Login", then **Install Now**. The `vendor/` directory is bundled — no `composer install` needed.
 2. Activate the plugin in Plugins.
 3. Configure under **WooCommerce → Social Login** — each tab has the step-by-step guide for its console and the ready-to-copy Redirect URI.
 
@@ -67,6 +64,28 @@ Yes, and it's recommended. Define the constants in `wp-config.php`; they take pr
 
 Google emits the `email_verified` claim and the plugin requires `true`. Microsoft personal accounts (tenant `consumers`) do not emit the claim — the email is that of the Microsoft account itself — so its absence is accepted **only** for Microsoft, and the `iss` is validated against the fixed personal-accounts tenant GUID. An explicit `email_verified=false` is always rejected, whatever the source.
 
+== External services ==
+
+This plugin is an interface to the sign-in services of Google and Microsoft. It contacts them only when you, the site administrator, enable and configure a provider, and only while a visitor is actively signing in with that provider. There is no telemetry, no analytics, and no data is ever sent to PixelHunter or to any other third party.
+
+= Google Sign-In (used only when the Google provider is enabled) =
+
+* `accounts.google.com` — the visitor's browser is redirected here to sign in. The request carries the Client ID you configured, the redirect URI of your site, the requested scopes (`openid email profile`), and a single-use `state`/`nonce`. The visitor enters their credentials **at Google**; the store never sees them.
+* `oauth2.googleapis.com` — server-to-server exchange of the authorization code for an `id_token`. Sends the Client ID, the Client Secret, the authorization code, and the redirect URI.
+* `www.googleapis.com` — fetches Google's public signing keys (JWKS) to verify the `id_token` signature. No site or visitor data is sent; the response is cached.
+
+Data received back from Google and stored on your site: the account identifier (`sub`), email address, name, and the `email_verified` flag. The `sub` is stored as user meta so the account can be recognised on the next sign-in.
+
+Google terms of service: https://policies.google.com/terms — Google privacy policy: https://policies.google.com/privacy
+
+= Microsoft identity platform (used only when the Microsoft provider is enabled) =
+
+* `login.microsoftonline.com` — the same three roles as above (visitor sign-in redirect, code-for-token exchange, and JWKS key fetch), against the `consumers` tenant for personal Microsoft accounts.
+
+Data received back from Microsoft and stored on your site: the account identifier (`sub`), email address, and name.
+
+Microsoft services agreement: https://www.microsoft.com/servicesagreement — Microsoft privacy statement: https://privacy.microsoft.com/privacystatement
+
 == Screenshots ==
 
 1. Google and Microsoft buttons on the WooCommerce login/register form (light and dark themes, responsive).
@@ -74,6 +93,12 @@ Google emits the `email_verified` claim and the plugin requires `true`. Microsof
 3. Admin settings — Microsoft tab (Azure setup guide and secret-expiry note).
 
 == Changelog ==
+
+= 0.4.0 =
+* Prepared for the WordPress.org Plugin Directory: plugin folder, main file and text domain renamed to `pixelhunter-social-login`; the bundled update checker and the `Update URI` header were removed (updates now come from the directory).
+* **Breaking:** the Redirect URI changed to `/wp-json/pixelhunter-social-login/v1/…`. Re-copy it from **WooCommerce → Social Login** into the Google Cloud Console and the Azure portal, otherwise sign-in fails with `redirect_uri_mismatch`.
+* Added an "External services" section documenting every request made to Google and Microsoft and the data involved.
+* No change to stored settings or to already-linked customer accounts.
 
 = 0.3.3 =
 * Screenshots now render as images in the "View Details" modal. WordPress's readme parser strips `<img>` from the screenshots section, so the images are injected after parsing (from the repo assets) instead.
@@ -103,6 +128,9 @@ Google emits the `email_verified` claim and the plugin requires `true`. Microsof
 * Initial release: OAuth `/start` and `/callback` endpoints, single-use `state`/`nonce` CSRF protection, full `id_token` claim validation against the provider JWKS, secure account lookup/create/link, the Google button via WooCommerce hooks, and the admin settings page with setup guide and live status.
 
 == Upgrade Notice ==
+
+= 0.4.0 =
+The Redirect URI changed. After updating, copy the new one from WooCommerce → Social Login into the Google Cloud Console and the Azure portal, or sign-in will fail. Settings and linked accounts are preserved.
 
 = 0.3.3 =
 Screenshots now show as images in the plugin's "View Details" screen. No functional changes.

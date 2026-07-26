@@ -4,7 +4,7 @@
  * já existente) e o momento em que o utilizador prova a posse fazendo login.
  * Guarda o provider para ligar a meta certa.
  *
- * @package PixelHunter_Google_Login
+ * @package PixelHunter_Social_Login
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -86,7 +86,7 @@ class PixelHunter_Login_Link {
 			wc_add_notice(
 				sprintf(
 					/* translators: %s: provider name (Google/Microsoft). */
-					__( 'An account with this email already exists. Log in with your password to link %s (or use “Lost your password?”).', 'pixelhunter-google-login' ),
+					__( 'An account with this email already exists. Log in with your password to link %s (or use “Lost your password?”).', 'pixelhunter-social-login' ),
 					$label
 				),
 				'notice'
@@ -107,13 +107,13 @@ class PixelHunter_Login_Link {
 	protected static function error_message( string $code, string $label ): string {
 		if ( 'token_email_verified' === $code ) {
 			/* translators: %s: provider name (Google/Microsoft). */
-			return sprintf( __( 'Your %s account email is not verified, so it cannot be used to sign in here.', 'pixelhunter-google-login' ), $label );
+			return sprintf( __( 'Your %s account email is not verified, so it cannot be used to sign in here.', 'pixelhunter-social-login' ), $label );
 		}
 		if ( 'reject' === $code ) {
 			/* translators: %s: provider name (Google/Microsoft). */
-			return sprintf( __( 'Could not sign in with %s.', 'pixelhunter-google-login' ), $label );
+			return sprintf( __( 'Could not sign in with %s.', 'pixelhunter-social-login' ), $label );
 		}
 		/* translators: %s: provider name (Google/Microsoft). */
-		return sprintf( __( 'Signing in with %s failed. Please try again.', 'pixelhunter-google-login' ), $label );
+		return sprintf( __( 'Signing in with %s failed. Please try again.', 'pixelhunter-social-login' ), $label );
 	}
 }

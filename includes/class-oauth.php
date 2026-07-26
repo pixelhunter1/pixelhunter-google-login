@@ -4,7 +4,7 @@
  * autorização; {callback_path} trata o regresso. As rotas vêm do registry —
  * este ficheiro não conhece nenhum provider em concreto.
  *
- * @package PixelHunter_Google_Login
+ * @package PixelHunter_Social_Login
  */
 
 defined( 'ABSPATH' ) || exit;
