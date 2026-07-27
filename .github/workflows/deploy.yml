@@ -1,0 +1,20 @@
+name: Deploy to WordPress.org
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          # O repo ainda se chama pixelhunter-google-login; o slug do wp.org
+          # e' outro. Quando o repo for renomeado, esta linha pode sair.
+          SLUG: pixelhunter-social-login
