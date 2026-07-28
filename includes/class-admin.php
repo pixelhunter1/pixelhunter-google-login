@@ -153,7 +153,10 @@ class PixelHunter_Login_Admin {
 		if ( PixelHunter_Login_Settings::secret_from_constant( $provider ) ) {
 			$out['client_secret'] = '';
 		} else {
-			$submitted = sanitize_text_field( $input['client_secret'] ?? '' );
+			// O secret é uma credencial opaca: sanitize_text_field() removeria
+			// sequências %XX e partiria secrets válidos. options.php já fez
+			// wp_unslash(); só se apara o espaço à volta.
+			$submitted = trim( (string) ( $input['client_secret'] ?? '' ) );
 			// Campo em branco significa "manter o secret existente" (nunca é pré-preenchido).
 			$out['client_secret'] = '' !== $submitted ? $submitted : (string) $existing['client_secret'];
 		}

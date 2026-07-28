@@ -9,3 +9,6 @@ assets/screenshot-*.png export-ignore
 /.distignore export-ignore
 /phpcs.xml.dist export-ignore
 /.wordpress-org export-ignore
+# As traduções vêm do translate.wordpress.org; os ficheiros ficam no repo
+# (fonte + uso local) mas não seguem no pacote distribuído.
+/languages export-ignore

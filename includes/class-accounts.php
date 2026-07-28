@@ -32,7 +32,9 @@ class PixelHunter_Login_Accounts {
 		}
 		$users = get_users(
 			array(
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- lookup pelo identificador do provider; é o único caminho e limita-se a 1 resultado.
 				'meta_key'   => $provider['meta_sub'],
+				// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- idem: o sub é a chave de ligação da conta.
 				'meta_value' => $sub,
 				'number'     => 1,
 				'fields'     => 'ID',

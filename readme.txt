@@ -4,7 +4,7 @@ Tags: woocommerce, login, google, microsoft, oauth
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 0.4.0
+Stable tag: 0.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,10 @@ Microsoft services agreement: https://www.microsoft.com/servicesagreement — Mi
 3. Admin settings — Microsoft tab (Azure setup guide and secret-expiry note).
 
 == Changelog ==
+
+= 0.4.1 =
+* The Client Secret is no longer passed through `sanitize_text_field()` when saved: it is an opaque credential and sanitizing could corrupt valid secrets. Same for the OAuth authorization code on the callback.
+* Translation files are no longer bundled; translations come from translate.wordpress.org.
 
 = 0.4.0 =
 * Prepared for the WordPress.org Plugin Directory: plugin folder, main file and text domain renamed to `pixelhunter-social-login`; the bundled update checker and the `Update URI` header were removed (updates now come from the directory).

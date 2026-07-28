@@ -107,7 +107,8 @@ class PixelHunter_Login_OAuth {
 	}
 
 	protected function redirect( string $url ) {
-		wp_redirect( $url ); // URL do provider / URL da conta no mesmo host; não controlado pelo utilizador além do redirect_to validado.
+		// phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- o destino é o endpoint do provider (externo por definição), construído a partir do registry; os destinos internos passam antes por wp_validate_redirect().
+		wp_redirect( $url );
 		exit;
 	}
 
@@ -123,7 +124,9 @@ class PixelHunter_Login_OAuth {
 		$this->clear_cookie( self::COOKIE );
 
 		$state = sanitize_text_field( (string) $request->get_param( 'state' ) );
-		$code  = sanitize_text_field( (string) $request->get_param( 'code' ) );
+		// O authorization code é opaco (só viaja para o provider, nunca é
+		// guardado nem impresso): sanitizá-lo podia partir códigos válidos.
+		$code = trim( (string) $request->get_param( 'code' ) );
 
 		if ( ! is_array( $stored ) || '' === $state || ! hash_equals( (string) $stored['state'], $state ) ) {
 			return $this->fail( $account_url, $provider, 'state' );
@@ -158,7 +161,7 @@ class PixelHunter_Login_OAuth {
 			wp_set_current_user( (int) $result['user_id'] );
 			wp_set_auth_cookie( (int) $result['user_id'], true );
 			if ( $user ) {
-				do_action( 'wp_login', $user->user_login, $user );
+				do_action( 'wp_login', $user->user_login, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- hook do core, disparado de propósito depois do login programático.
 			}
 			return $this->redirect( wp_validate_redirect( (string) $stored['redirect_to'], $account_url ) );
 		}
