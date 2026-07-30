@@ -3,7 +3,7 @@
 ![WordPress](https://img.shields.io/badge/WordPress-%E2%89%A5%206.0-21759b?logo=wordpress&logoColor=white)
 ![WooCommerce](https://img.shields.io/badge/WooCommerce-ready-96588a?logo=woocommerce&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-%E2%89%A5%208.0-777bb3?logo=php&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-36%20asserts-brightgreen)
+![Tests](https://img.shields.io/badge/tests-35%20asserts-brightgreen)
 [![Última versão](https://img.shields.io/github/v/release/pixelhunter1/pixelhunter-google-login?label=vers%C3%A3o&color=blue)](https://github.com/pixelhunter1/pixelhunter-google-login/releases/latest)
 
 Login e registo com **Google** e **Microsoft** (contas pessoais: Hotmail, Outlook.com, Live) para lojas WooCommerce, via **OAuth 2.0 / OpenID Connect** — auto-contido, sem plugins de terceiros nem serviços intermediários. As credenciais dos clientes nunca passam pela loja: a autenticação acontece no Google/Microsoft e o plugin apenas valida criptograficamente o resultado.

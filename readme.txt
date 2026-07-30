@@ -4,7 +4,7 @@ Tags: woocommerce, login, google, microsoft, oauth
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,10 @@ Microsoft services agreement: https://www.microsoft.com/servicesagreement — Mi
 3. Admin settings — Microsoft tab (Azure setup guide and secret-expiry note).
 
 == Changelog ==
+
+= 0.4.2 =
+* First release from the WordPress.org Plugin Directory.
+* Added the `Requires Plugins: woocommerce` header: the plugin only hooks into the WooCommerce login and registration forms, so WordPress now refuses to activate it without WooCommerce instead of activating and doing nothing.
 
 = 0.4.1 =
 * The Client Secret is no longer passed through `sanitize_text_field()` when saved: it is an opaque credential and sanitizing could corrupt valid secrets. Same for the OAuth authorization code on the callback.
