@@ -3,7 +3,7 @@
  * Plugin Name: PixelHunter Social Login
  * Plugin URI: https://wordpress.org/plugins/pixelhunter-social-login/
  * Description: Google and Microsoft login/registration for WooCommerce (OAuth 2.0 / OpenID Connect) — self-contained, no third-party services.
- * Version: 0.4.2
+ * Version: 0.4.3
  * Author: Miguel Carneiro
  * Author URI: https://pixelhunter.pt
  * Requires at least: 6.0
@@ -26,7 +26,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'PIXELHUNTER_LOGIN_VERSION', '0.4.2' );
+define( 'PIXELHUNTER_LOGIN_VERSION', '0.4.3' );
 define( 'PIXELHUNTER_LOGIN_FILE', __FILE__ );
 define( 'PIXELHUNTER_LOGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'PIXELHUNTER_LOGIN_URL', plugin_dir_url( __FILE__ ) );

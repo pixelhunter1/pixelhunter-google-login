@@ -4,7 +4,7 @@ Tags: woocommerce, login, google, microsoft, oauth
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.0
-Stable tag: 0.4.2
+Stable tag: 0.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,11 @@ Microsoft services agreement: https://www.microsoft.com/servicesagreement — Mi
 
 == Changelog ==
 
+= 0.4.3 =
+* **Fixed:** sign-in could fail permanently on hosts that force browser caching of HTML/PHP (WP-Optimize, LiteSpeed Cache, W3TC and similar). The browser replayed a cached redirect carrying an expired one-time state, so every attempt ended in "Signing in failed". The sign-in URL is now unique per page render and the OAuth routes send no-cache headers.
+* Credential fields warn when the value does not match the provider's known format (for example, the Azure "Secret ID" pasted into the Client Secret field, which should be the secret's "Value"). The Status panel now distinguishes "filled in" from "correct format" instead of showing a green check for any non-empty value.
+* Clearer sign-in error messages: an expired session now says so and tells the customer to try again from the account page, instead of a generic failure notice.
+
 = 0.4.2 =
 * First release from the WordPress.org Plugin Directory.
 * Added the `Requires Plugins: woocommerce` header: the plugin only hooks into the WooCommerce login and registration forms, so WordPress now refuses to activate it without WooCommerce instead of activating and doing nothing.
@@ -136,6 +141,9 @@ Microsoft services agreement: https://www.microsoft.com/servicesagreement — Mi
 * Initial release: OAuth `/start` and `/callback` endpoints, single-use `state`/`nonce` CSRF protection, full `id_token` claim validation against the provider JWKS, secure account lookup/create/link, the Google button via WooCommerce hooks, and the admin settings page with setup guide and live status.
 
 == Upgrade Notice ==
+
+= 0.4.3 =
+Fixes sign-in failing permanently on hosts that force browser caching of HTML/PHP. Recommended for every store. No settings change.
 
 = 0.4.0 =
 The Redirect URI changed. After updating, copy the new one from WooCommerce → Social Login into the Google Cloud Console and the Azure portal, or sign-in will fail. Settings and linked accounts are preserved.

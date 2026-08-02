@@ -45,7 +45,11 @@ class PixelHunter_Login_Button {
 		<div class="pc-social-login">
 			<?php foreach ( $providers as $provider ) : ?>
 				<?php
-				$url = PixelHunter_Login_Settings::start_url( $provider, $redirect_to );
+				// URL diferente a cada render: garante cache miss no /start
+				// mesmo em alojamentos que forçam browser cache a HTML/PHP
+				// (WP-Optimize, LiteSpeed, W3TC). route_start() ignora o
+				// parâmetro. Ver nocache_headers() em class-oauth.php.
+				$url = add_query_arg( '_phgl', dechex( time() ), PixelHunter_Login_Settings::start_url( $provider, $redirect_to ) );
 				$svg = @file_get_contents( PIXELHUNTER_LOGIN_DIR . 'assets/' . $provider['icon'] );
 				?>
 				<a class="pc-social-btn pc-social-btn--<?php echo esc_attr( $provider['slug'] ); ?> pc-social-btn--<?php echo esc_attr( $theme ); ?>" href="<?php echo esc_url( $url ); ?>" aria-label="<?php echo esc_attr( $provider['button_label'] ); ?>">

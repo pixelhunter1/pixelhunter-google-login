@@ -113,6 +113,15 @@ class PixelHunter_Login_Link {
 			/* translators: %s: provider name (Google/Microsoft). */
 			return sprintf( __( 'Could not sign in with %s.', 'pixelhunter-social-login' ), $label );
 		}
+		// De longe o mais frequente (sessão expirada, cookie perdido, redirect
+		// cacheado) e o que mais precisa de dizer o que fazer a seguir.
+		if ( 'state' === $code ) {
+			return __( 'Your sign-in session expired. Go back to the account page and try again.', 'pixelhunter-social-login' );
+		}
+		if ( 'exchange' === $code || 0 === strpos( $code, 'token_' ) ) {
+			/* translators: %s: provider name (Google/Microsoft). */
+			return sprintf( __( 'Could not validate the response from %s. If this keeps happening, please contact us.', 'pixelhunter-social-login' ), $label );
+		}
 		/* translators: %s: provider name (Google/Microsoft). */
 		return sprintf( __( 'Signing in with %s failed. Please try again.', 'pixelhunter-social-login' ), $label );
 	}

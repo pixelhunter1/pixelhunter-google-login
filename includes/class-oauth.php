@@ -107,6 +107,13 @@ class PixelHunter_Login_OAuth {
 	}
 
 	protected function redirect( string $url ) {
+		// O 302 do /start transporta um state de uso único: cacheá-lo faz o
+		// browser repetir um state já expirado, sem cookie novo, e o login
+		// falha para sempre. O WP só manda nocache no REST a utilizadores
+		// autenticados — aqui ninguém está. (Não chega sozinho: um servidor
+		// com "Header set Cache-Control" sobrepõe-se. Ver o cache-buster em
+		// class-button.php.)
+		nocache_headers();
 		// phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- o destino é o endpoint do provider (externo por definição), construído a partir do registry; os destinos internos passam antes por wp_validate_redirect().
 		wp_redirect( $url );
 		exit;

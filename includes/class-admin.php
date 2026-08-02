@@ -165,7 +165,20 @@ class PixelHunter_Login_Admin {
 		if ( isset( $existing['button_theme'] ) ) {
 			$out['button_theme'] = $existing['button_theme'];
 		}
+		// Aviso, não bloqueio: guarda-se na mesma, mas dizer "isto não parece
+		// um Client ID" evita a config errada que passa por boa no Status.
+		foreach ( array( 'client_id', 'client_secret' ) as $field ) {
+			if ( ! self::format_ok( $provider, $field, (string) $out[ $field ] ) ) {
+				add_settings_error( $provider['option'], $provider['option'] . '-' . $field, $provider['format_hints'][ $field ][1], 'warning' );
+			}
+		}
 		return $out;
+	}
+
+	/** Falso só quando o valor está preenchido e não bate com o formato conhecido do provider. */
+	protected static function format_ok( array $provider, string $field, string $value ): bool {
+		$hint = $provider['format_hints'][ $field ] ?? null;
+		return ! $hint || '' === $value || 1 === preg_match( $hint[0], $value );
 	}
 
 	public function sanitize_appearance( $input ): array {
@@ -319,19 +332,34 @@ class PixelHunter_Login_Admin {
 	protected function render_status( array $provider ): void {
 		$s          = PixelHunter_Login_Settings::get( $provider );
 		$from_const = PixelHunter_Login_Settings::secret_from_constant( $provider );
-		$has_secret = '' !== PixelHunter_Login_Settings::client_secret( $provider );
-		$row        = static function ( bool $ok, string $label ): void {
+		$secret     = PixelHunter_Login_Settings::client_secret( $provider );
+		// Três estados: true (ok), 'warn' (preenchido mas com formato
+		// inesperado) e false (vazio). Um ✅ que só quer dizer "preenchido"
+		// lê-se como "válido" e dá a config por boa quando não está.
+		$state      = static function ( string $value, string $field ) use ( $provider ) {
+			if ( '' === $value ) {
+				return false;
+			}
+			return self::format_ok( $provider, $field, $value ) ? true : 'warn';
+		};
+		$row        = static function ( $state, string $label ): void {
+			if ( 'warn' === $state ) {
+				/* translators: %s: status label, e.g. “Client ID set”. */
+				$label = sprintf( __( '%s — unexpected format', 'pixelhunter-social-login' ), $label );
+			}
+			$kind = true === $state ? 'ok' : ( 'warn' === $state ? 'warn' : 'off' );
+			$icon = true === $state ? 'dashicons-yes-alt' : ( 'warn' === $state ? 'dashicons-warning' : 'dashicons-dismiss' );
 			printf(
 				'<li class="phl-status__item phl-status__item--%s"><span class="dashicons %s" aria-hidden="true"></span> %s</li>',
-				$ok ? 'ok' : 'off',
-				$ok ? 'dashicons-yes-alt' : 'dashicons-dismiss',
+				esc_attr( $kind ),
+				esc_attr( $icon ),
 				esc_html( $label )
 			);
 		};
 		echo '<ul class="phl-status">';
 		$row( (bool) $s['enabled'], __( 'Enabled', 'pixelhunter-social-login' ) );
-		$row( '' !== (string) $s['client_id'], __( 'Client ID set', 'pixelhunter-social-login' ) );
-		$row( $has_secret, $from_const ? __( 'Client Secret set (via wp-config)', 'pixelhunter-social-login' ) : __( 'Client Secret set', 'pixelhunter-social-login' ) );
+		$row( $state( (string) $s['client_id'], 'client_id' ), __( 'Client ID set', 'pixelhunter-social-login' ) );
+		$row( $state( $secret, 'client_secret' ), $from_const ? __( 'Client Secret set (via wp-config)', 'pixelhunter-social-login' ) : __( 'Client Secret set', 'pixelhunter-social-login' ) );
 		echo '</ul>';
 	}
 

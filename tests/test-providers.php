@@ -35,4 +35,24 @@ phgl_assert( false === $m['require_email_verified'], 'microsoft: não exige emai
 phgl_assert( '/microsoft/callback' === $m['callback_path'], 'microsoft: rota própria de callback' );
 phgl_assert( $m['meta_sub'] !== $g['meta_sub'], 'meta keys distintas por provider' );
 
+// format_hints: o caso real foi colar o Valor do segredo no Client ID e o ID
+// secreto no Client Secret. Os dois padrões do Microsoft têm de apanhar a troca.
+$fmt = static function ( array $provider, string $field, string $value ): bool {
+	return 1 === preg_match( $provider['format_hints'][ $field ][0], $value );
+};
+
+$ms_client_id = '11111111-2222-3333-4444-555555555555';
+$ms_secret    = 'dNt8Q~aBcD3fGh1jKlMnOpQrStUvWxYz.0123456';
+phgl_assert( $fmt( $m, 'client_id', $ms_client_id ), 'microsoft: GUID aceite como client_id' );
+phgl_assert( $fmt( $m, 'client_secret', $ms_secret ), 'microsoft: valor do segredo aceite como client_secret' );
+phgl_assert( ! $fmt( $m, 'client_id', $ms_secret ), 'microsoft: segredo no campo client_id é assinalado' );
+phgl_assert( ! $fmt( $m, 'client_secret', $ms_client_id ), 'microsoft: GUID (Secret ID) no campo client_secret é assinalado' );
+
+$g_client_id = '123456789012-abcdefghijklmnop.apps.googleusercontent.com';
+$g_secret    = 'GOCSPX-aBcD3fGh1jKlMnOpQrStUv';
+phgl_assert( $fmt( $g, 'client_id', $g_client_id ), 'google: client_id com sufixo correto aceite' );
+phgl_assert( $fmt( $g, 'client_secret', $g_secret ), 'google: secret GOCSPX- aceite' );
+phgl_assert( ! $fmt( $g, 'client_id', $g_secret ), 'google: secret no campo client_id é assinalado' );
+phgl_assert( ! $fmt( $g, 'client_secret', $g_client_id ), 'google: client_id no campo secret é assinalado' );
+
 phgl_summary();

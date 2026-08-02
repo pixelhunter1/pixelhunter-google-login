@@ -47,6 +47,10 @@ class PixelHunter_Login_Providers {
 				'meta_linked_at'         => '_pixelhunter_google_linked_at',
 				'start_path'             => '/start',
 				'callback_path'          => '/callback',
+				'format_hints'           => array(
+					'client_id'     => array( '/\.apps\.googleusercontent\.com$/', __( 'The Client ID normally ends in .apps.googleusercontent.com — check you copied the right field.', 'pixelhunter-social-login' ) ),
+					'client_secret' => array( '/^GOCSPX-/', __( 'The Client Secret normally starts with GOCSPX- — check you copied the right field.', 'pixelhunter-social-login' ) ),
+				),
 			),
 			'microsoft' => array(
 				'slug'                   => 'microsoft',
@@ -69,6 +73,13 @@ class PixelHunter_Login_Providers {
 				'meta_linked_at'         => '_pixelhunter_microsoft_linked_at',
 				'start_path'             => '/microsoft/start',
 				'callback_path'          => '/microsoft/callback',
+				// O Azure mostra "Valor" e "ID secreto" lado a lado e é fácil
+				// trocá-los. O ID é um GUID (só hex e hífens); o Valor tem
+				// sempre caracteres fora desse alfabeto — daí o segundo padrão.
+				'format_hints'           => array(
+					'client_id'     => array( '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', __( 'The Client ID should be the “Application (client) ID”, a GUID — not the secret.', 'pixelhunter-social-login' ) ),
+					'client_secret' => array( '/[^0-9a-f-]/i', __( 'The Client Secret should be the secret’s “Value” column — this looks like the “Secret ID”.', 'pixelhunter-social-login' ) ),
+				),
 			),
 		);
 		return $providers[ $slug ] ?? null;

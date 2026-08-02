@@ -36,3 +36,4 @@
 .phl-status__item .dashicons { font-size: 18px; width: 18px; height: 18px; }
 .phl-status__item--ok .dashicons { color: #00a32a; }
 .phl-status__item--off .dashicons { color: #d63638; }
+.phl-status__item--warn .dashicons { color: #dba617; }
